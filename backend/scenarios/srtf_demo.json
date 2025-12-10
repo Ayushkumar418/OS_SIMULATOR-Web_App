@@ -1,0 +1,38 @@
+{
+    "name": "SRTF - Shortest Remaining Time First",
+    "description": "Preemptive SJF - preempts when shorter job arrives",
+    "algorithm": "sjf",
+    "time_quantum": 4,
+    "preemptive": true,
+    "processes": [
+        {
+            "pid": 1,
+            "arrival_time": 0,
+            "burst_time": 8,
+            "priority": 0,
+            "memory_required": 4
+        },
+        {
+            "pid": 2,
+            "arrival_time": 1,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 3
+        },
+        {
+            "pid": 3,
+            "arrival_time": 2,
+            "burst_time": 2,
+            "priority": 0,
+            "memory_required": 2
+        },
+        {
+            "pid": 4,
+            "arrival_time": 3,
+            "burst_time": 1,
+            "priority": 0,
+            "memory_required": 2
+        }
+    ],
+    "notes": "Shows preemption: P1 starts, P2 preempts at t=1, P3 preempts at t=2, P4 preempts at t=3"
+}

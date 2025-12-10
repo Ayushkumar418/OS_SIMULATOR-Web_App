@@ -1,0 +1,39 @@
+{
+    "name": "SJF - Shortest Job First Demo",
+    "description": "Non-preemptive SJF scheduling - selects process with shortest burst time",
+    "algorithm": "sjf",
+    "time_quantum": 4,
+    "preemptive": false,
+    "processes": [
+        {
+            "pid": 1,
+            "arrival_time": 0,
+            "burst_time": 7,
+            "priority": 0,
+            "memory_required": 4
+        },
+        {
+            "pid": 2,
+            "arrival_time": 2,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 3
+        },
+        {
+            "pid": 3,
+            "arrival_time": 4,
+            "burst_time": 1,
+            "priority": 0,
+            "memory_required": 2
+        },
+        {
+            "pid": 4,
+            "arrival_time": 5,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 3
+        }
+    ],
+    "expected_order": "P1 → P3 → P2 → P4",
+    "notes": "P1 runs first (only process). At time 7, P3 has shortest time (1) so runs next, then P2, then P4."
+}

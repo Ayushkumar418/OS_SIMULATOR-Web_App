@@ -1,0 +1,42 @@
+.explanation-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--space-md);
+    background: var(--clr-bg-tertiary);
+    border-radius: var(--radius-md);
+    max-width: 65vw;
+    width: 100%;
+}
+
+.explanation-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    background: var(--clr-bg-secondary);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--clr-accent-blue);
+}
+
+.explanation-number {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--clr-accent-blue);
+    color: white;
+    border-radius: 50%;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+}
+
+.explanation-text {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--clr-text-secondary);
+}

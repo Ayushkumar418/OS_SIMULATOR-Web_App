@@ -1,0 +1,113 @@
+{
+    "name": "Large Test - 15 Processes",
+    "description": "Test scenario with 15 processes to verify Gantt chart scrolling",
+    "algorithm": "fcfs",
+    "time_quantum": 4,
+    "processes": [
+        {
+            "pid": 1,
+            "arrival_time": 0,
+            "burst_time": 3,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 2,
+            "arrival_time": 0,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 3,
+            "arrival_time": 1,
+            "burst_time": 2,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 4,
+            "arrival_time": 1,
+            "burst_time": 5,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 5,
+            "arrival_time": 2,
+            "burst_time": 3,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 6,
+            "arrival_time": 2,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 7,
+            "arrival_time": 3,
+            "burst_time": 2,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 8,
+            "arrival_time": 3,
+            "burst_time": 6,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 9,
+            "arrival_time": 4,
+            "burst_time": 3,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 10,
+            "arrival_time": 4,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 11,
+            "arrival_time": 5,
+            "burst_time": 2,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 12,
+            "arrival_time": 5,
+            "burst_time": 5,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 13,
+            "arrival_time": 6,
+            "burst_time": 3,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 14,
+            "arrival_time": 6,
+            "burst_time": 4,
+            "priority": 0,
+            "memory_required": 0
+        },
+        {
+            "pid": 15,
+            "arrival_time": 7,
+            "burst_time": 2,
+            "priority": 0,
+            "memory_required": 0
+        }
+    ]
+}

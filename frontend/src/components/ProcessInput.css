@@ -1,0 +1,49 @@
+.process-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.form-row .form-group {
+    margin-bottom: 0;
+}
+
+/* PID Helper Styles */
+.pid-helper {
+    font-size: var(--font-size-xs);
+    font-weight: 400;
+    margin-left: var(--space-xs);
+}
+
+.pid-helper strong {
+    color: var(--clr-text-primary);
+    font-weight: 600;
+}
+
+/* Arrival Time Warning */
+.arrival-warning {
+    display: block;
+    margin-top: var(--space-xs);
+    color: var(--clr-accent-orange);
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+}
+
+.input-warning {
+    border-color: var(--clr-accent-orange) !important;
+    background: rgba(251, 146, 60, 0.05);
+}
+
+.helper-text {
+    display: block;
+    margin-top: var(--space-xs);
+    font-size: var(--font-size-xs);
+    color: var(--clr-text-muted);
+    font-style: italic;
+}

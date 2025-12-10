@@ -1,0 +1,38 @@
+{
+    "name": "Priority Scheduling - Preemptive",
+    "description": "Preemptive priority - higher priority process preempts lower priority",
+    "algorithm": "priority",
+    "time_quantum": 4,
+    "preemptive": true,
+    "processes": [
+        {
+            "pid": 1,
+            "arrival_time": 0,
+            "burst_time": 6,
+            "priority": 3,
+            "memory_required": 4
+        },
+        {
+            "pid": 2,
+            "arrival_time": 2,
+            "burst_time": 4,
+            "priority": 1,
+            "memory_required": 3
+        },
+        {
+            "pid": 3,
+            "arrival_time": 4,
+            "burst_time": 3,
+            "priority": 0,
+            "memory_required": 2
+        },
+        {
+            "pid": 4,
+            "arrival_time": 6,
+            "burst_time": 2,
+            "priority": 2,
+            "memory_required": 2
+        }
+    ],
+    "notes": "P1 starts, P2 preempts at t=2, P3 (priority 0) preempts P2 at t=4. Shows priority preemption."
+}

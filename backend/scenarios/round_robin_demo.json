@@ -1,0 +1,29 @@
+{
+    "name": "Round Robin Demo",
+    "description": "Demonstration of Round Robin scheduling with time quantum of 4",
+    "algorithm": "round_robin",
+    "time_quantum": 4,
+    "processes": [
+        {
+            "pid": 1,
+            "arrival_time": 0,
+            "burst_time": 10,
+            "priority": 0,
+            "memory_required": 4
+        },
+        {
+            "pid": 2,
+            "arrival_time": 1,
+            "burst_time": 5,
+            "priority": 0,
+            "memory_required": 3
+        },
+        {
+            "pid": 3,
+            "arrival_time": 2,
+            "burst_time": 8,
+            "priority": 0,
+            "memory_required": 5
+        }
+    ]
+}
