@@ -6,8 +6,11 @@
 .page-header {
     padding: 1rem;
     margin: 1rem;
+    margin-bottom: 1rem !important;
     background: var(--clr-bg-secondary);
     border-bottom: 1px solid var(--clr-border);
+    padding-bottom: 1rem !important;
+    border-radius: var(--radius-md);
 }
 
 .back-link {

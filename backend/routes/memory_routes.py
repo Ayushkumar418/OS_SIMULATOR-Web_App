@@ -11,11 +11,13 @@ from memory.page_replacement import (
     FIFOReplacement, LRUReplacement, OptimalReplacement,
     simulate_page_replacement
 )
+from memory.contiguous import ContiguousMemoryManager, AllocationAlgorithm
 
 router = APIRouter()
 
-# Global paging manager instances (in production, use proper state management)
+# Global managers (in production, use proper state management)
 paging_managers = {}
+contiguous_manager = None  # Will be initialized on first use
 
 
 class CreatePageTableRequest(BaseModel):
@@ -44,6 +46,102 @@ class PageReplacementRequest(BaseModel):
     algorithm: str  # "fifo", "lru", "optimal"
     num_frames: int
     reference_string: List[int]
+
+
+class ContiguousAllocateRequest(BaseModel):
+    process_id: int
+    size: int
+    algorithm: str  # "first_fit", "best_fit", "worst_fit", "next_fit"
+    total_memory: Optional[int] = 1000
+
+
+class ContiguousDeallocateRequest(BaseModel):
+    process_id: int
+
+
+@router.post("/contiguous/allocate")
+async def allocate_contiguous(request: ContiguousAllocateRequest):
+    """Allocate memory using contiguous allocation algorithms"""
+    global contiguous_manager
+    
+    try:
+        # Always reinitialize manager if total_memory is provided and different
+        if request.total_memory:
+            if contiguous_manager is None or contiguous_manager.total_memory != request.total_memory:
+                contiguous_manager = ContiguousMemoryManager(total_memory=request.total_memory)
+        elif contiguous_manager is None:
+            # Initialize with default if not provided
+            contiguous_manager = ContiguousMemoryManager(total_memory=1000)
+        
+        # Parse algorithm
+        try:
+            algorithm = AllocationAlgorithm(request.algorithm.lower())
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid algorithm: {request.algorithm}")
+        
+        # Allocate memory
+        success, result = contiguous_manager.allocate(
+            process_id=request.process_id,
+            size=request.size,
+            algorithm=algorithm
+        )
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("message", "Allocation failed"))
+        
+        return result
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/contiguous/deallocate")
+async def deallocate_contiguous(request: ContiguousDeallocateRequest):
+    """Deallocate memory for a process"""
+    global contiguous_manager
+    
+    try:
+        if contiguous_manager is None:
+            raise HTTPException(status_code=400, detail="No memory manager initialized")
+        
+        success, result = contiguous_manager.deallocate(request.process_id)
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("message", "Deallocation failed"))
+        
+        return result
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/contiguous/state")
+async def get_contiguous_state():
+    """Get current contiguous memory state"""
+    global contiguous_manager
+    
+    if contiguous_manager is None:
+        return {
+            "initialized": False,
+            "message": "No contiguous memory manager initialized"
+        }
+    
+    return {
+        "initialized": True,
+        **contiguous_manager.get_memory_state(),
+        "fragmentation": contiguous_manager.calculate_fragmentation()
+    }
+
+
+@router.post("/contiguous/reset")
+async def reset_contiguous():
+    """Reset contiguous memory manager"""
+    global contiguous_manager
+    
+    # Set to None to force reinitialization with new size
+    contiguous_manager = None
+    
+    return {"success": True, "message": "Contiguous memory manager reset"}
 
 
 @router.post("/create-page-table")

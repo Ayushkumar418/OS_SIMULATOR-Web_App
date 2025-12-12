@@ -130,6 +130,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-lg);
+    margin-bottom: 1rem;
 }
 
 .feature-card {
