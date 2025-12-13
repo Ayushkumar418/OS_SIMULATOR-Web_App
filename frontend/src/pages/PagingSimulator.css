@@ -1,0 +1,1624 @@
+/* Paging Simulator - Matrix Theme (Scoped to prevent conflicts) */
+
+:root {
+    --matrix-primary: #00ff41;
+    --matrix-secondary: #00d4ff;
+    --matrix-bg: #0a0e14;
+    --matrix-card: #131820;
+    --matrix-border: #1e2936;
+    --matrix-hit: #00ff41;
+    --matrix-fault: #ff0055;
+    --matrix-warning: #ffaa00;
+    --matrix-text: #e0e0e0;
+    --matrix-text-dim: #8b92a0;
+    --matrix-glow: rgba(0, 255, 65, 0.3);
+}
+
+/* All styles scoped under .paging-simulator */
+.paging-simulator {
+    min-height: 100vh;
+    background: var(--matrix-bg);
+    color: var(--matrix-text);
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* Back Button - Specific to paging */
+.paging-simulator .pg-back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(0, 255, 65, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--matrix-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    color: var(--matrix-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.paging-simulator .pg-back-button:hover {
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 20px var(--matrix-glow);
+    transform: translateX(-4px);
+}
+
+/* Header */
+.paging-simulator .paging-header {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--matrix-border);
+    background: linear-gradient(180deg, var(--matrix-card) 0%, transparent 100%);
+}
+
+.paging-simulator .paging-header .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.paging-simulator .matrix-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--matrix-primary);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.1em;
+}
+
+.paging-simulator .matrix-bracket {
+    color: var(--matrix-secondary);
+    margin-right: 0.5rem;
+}
+
+.paging-simulator .matrix-cursor {
+    display: inline-block !important;
+    animation: pg-blink 1s infinite !important;
+    margin-left: 0.25rem;
+    opacity: 1;
+    color: var(--matrix-primary);
+    text-shadow: 0 0 10px var(--matrix-primary);
+    font-weight: bold;
+}
+
+@keyframes pg-blink {
+
+    0%,
+    49% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+.paging-simulator .header-subtitle {
+    font-size: 1.1rem;
+    color: var(--matrix-text-dim);
+    font-family: monospace;
+}
+
+.paging-simulator .help-button {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(0, 212, 255, 0.15);
+    border: 1px solid var(--matrix-secondary);
+    color: var(--matrix-secondary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.paging-simulator .help-button:hover {
+    background: rgba(0, 212, 255, 0.25);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+/* Error Notification */
+.paging-simulator .error-notification {
+    position: fixed;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1500;
+    max-width: 600px;
+    width: 90%;
+    animation: pg-slideDown 0.3s ease;
+}
+
+@keyframes pg-slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.paging-simulator .error-content {
+    background: rgba(255, 0, 85, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--matrix-fault);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 8px 32px rgba(255, 0, 85, 0.3);
+}
+
+.paging-simulator .error-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.paging-simulator .error-message {
+    flex: 1;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.paging-simulator .error-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.paging-simulator .error-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Layout */
+.paging-simulator .paging-layout {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+/* Control Section */
+.paging-simulator .control-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.paging-simulator .matrix-card {
+    background: var(--matrix-card);
+    border: 1px solid var(--matrix-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .matrix-card:hover {
+    border-color: var(--matrix-primary);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+.paging-simulator .matrix-card h3 {
+    font-size: 1.1rem;
+    color: var(--matrix-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Form Controls */
+.paging-simulator .config-group {
+    margin-bottom: 1rem;
+}
+
+.paging-simulator .config-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--matrix-text-dim);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.paging-simulator .matrix-input,
+.paging-simulator .matrix-select,
+.paging-simulator .matrix-textarea {
+    width: 100%;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--matrix-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    color: var(--matrix-text);
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .matrix-input:focus,
+.paging-simulator .matrix-select:focus,
+.paging-simulator .matrix-textarea:focus {
+    outline: none;
+    border-color: var(--matrix-primary);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+}
+
+/* Select Dropdown Styling */
+.paging-simulator .matrix-select,
+.paging-simulator select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300ff41' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-color: #0d1117;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.paging-simulator select:hover {
+    border-color: var(--matrix-primary);
+    background-color: rgba(0, 255, 65, 0.08);
+}
+
+/* Dropdown Options - Dark Theme */
+.paging-simulator select option {
+    background-color: #0d1117;
+    color: #e6edf3;
+    padding: 12px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+}
+
+.paging-simulator select option:hover,
+.paging-simulator select option:checked {
+    background-color: #00ff41;
+    color: #0d1117;
+}
+
+.paging-simulator .matrix-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Address Translator */
+.paging-simulator .address-input-group {
+    margin-bottom: 1rem;
+}
+
+.paging-simulator .address-input {
+    margin-bottom: 0.75rem;
+}
+
+.paging-simulator .format-selector {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.paging-simulator .format-btn {
+    flex: 1;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--matrix-border);
+    color: var(--matrix-text-dim);
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .format-btn.active {
+    background: var(--matrix-primary);
+    color: var(--matrix-bg);
+    border-color: var(--matrix-primary);
+}
+
+.paging-simulator .format-btn:hover:not(.active) {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: var(--matrix-primary);
+}
+
+/* Buttons */
+.paging-simulator .matrix-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.paging-simulator .matrix-button.primary {
+    background: var(--matrix-primary);
+    color: var(--matrix-bg);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.paging-simulator .matrix-button.primary:hover:not(:disabled) {
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+    transform: translateY(-2px);
+}
+
+.paging-simulator .matrix-button.primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.paging-simulator .matrix-button.secondary {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--matrix-secondary);
+    border: 1px solid var(--matrix-secondary);
+}
+
+.paging-simulator .matrix-button.secondary:hover {
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.paging-simulator .button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.paging-simulator .matrix-button.compare-btn {
+    background: linear-gradient(135deg, var(--matrix-secondary) 0%, var(--matrix-primary) 100%);
+    color: var(--matrix-bg);
+    font-weight: 700;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.paging-simulator .matrix-button.compare-btn:hover:not(:disabled) {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Comparison Section */
+.paging-simulator .comparison-section {
+    margin-top: 1.5rem;
+}
+
+.paging-simulator .comparison-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.paging-simulator .comparison-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 212, 255, 0.15);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--matrix-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Courier New', monospace;
+}
+
+.paging-simulator .comparison-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 255, 65, 0.03);
+    border: 1px solid var(--matrix-border);
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .comparison-row.best-result {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: var(--matrix-primary);
+    border-width: 2px;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.paging-simulator .comparison-row:hover {
+    background: rgba(0, 255, 65, 0.08);
+}
+
+.paging-simulator .comp-cell {
+    text-align: center;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paging-simulator .algorithm-name {
+    font-weight: 700;
+    color: var(--matrix-primary);
+    gap: 0.5rem;
+}
+
+.paging-simulator .best-badge {
+    font-size: 0.75rem;
+    color: var(--matrix-warning);
+}
+
+.paging-simulator .comparison-info {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(0, 212, 255, 0.05);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.paging-simulator .comparison-info p {
+    font-size: 0.9rem;
+    color: var(--matrix-text-dim);
+    font-family: 'Courier New', monospace;
+    margin: 0;
+}
+
+/* Visualization Area */
+.paging-simulator .visualization-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Statistics Grid */
+.paging-simulator .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.paging-simulator .stat-card {
+    background: var(--matrix-card);
+    border: 1px solid var(--matrix-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.paging-simulator .stat-card.fault {
+    border-color: var(--matrix-fault);
+}
+
+.paging-simulator .stat-card.fault:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+}
+
+.paging-simulator .stat-card.hit {
+    border-color: var(--matrix-hit);
+}
+
+.paging-simulator .stat-card.hit:hover {
+    box-shadow: 0 0 20px var(--matrix-glow);
+}
+
+.paging-simulator .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.paging-simulator .stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--matrix-primary);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 0.25rem;
+}
+
+.paging-simulator .stat-label {
+    font-size: 0.85rem;
+    color: var(--matrix-text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Memory Frames */
+.paging-simulator .memory-section {
+    min-height: 400px;
+}
+
+.paging-simulator .frames-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.paging-simulator .memory-frame {
+    background: rgba(0, 255, 65, 0.05);
+    border: 2px solid var(--matrix-border);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .memory-frame.free {
+    border-color: var(--matrix-border);
+    opacity: 0.5;
+}
+
+.paging-simulator .memory-frame.occupied {
+    border-color: var(--matrix-primary);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.paging-simulator .memory-frame.page-fault {
+    border-color: var(--matrix-fault);
+    background: rgba(255, 0, 85, 0.1);
+    animation: pulse-fault 0.6s ease;
+}
+
+@keyframes pulse-fault {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+    }
+}
+
+.paging-simulator .memory-frame.page-hit {
+    border-color: var(--matrix-hit);
+    background: rgba(0, 255, 65, 0.15);
+    animation: pulse-hit 0.6s ease;
+}
+
+@keyframes pulse-hit {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 25px rgba(0, 255, 65, 0.6);
+        border-width: 3px;
+    }
+}
+
+.paging-simulator .frame-number {
+    font-size: 0.75rem;
+    color: var(--matrix-text-dim);
+    margin-bottom: 0.5rem;
+    font-family: 'Courier New', monospace;
+}
+
+.paging-simulator .frame-content {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--matrix-primary);
+    font-family: 'Courier New', monospace;
+}
+
+/* Timeline Info */
+.paging-simulator .timeline-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 65, 0.05);
+    border-radius: 8px;
+    border: 1px solid var(--matrix-border);
+}
+
+.paging-simulator .step-indicator {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: var(--matrix-text);
+}
+
+.paging-simulator .fault-text {
+    color: var(--matrix-fault);
+    font-weight: 700;
+}
+
+.paging-simulator .hit-text {
+    color: var(--matrix-hit);
+    font-weight: 700;
+}
+
+.paging-simulator .victim-text {
+    color: var(--matrix-warning);
+    font-style: italic;
+}
+
+/* Playback Controls */
+.paging-simulator .playback-controls {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 65, 0.03);
+    border-radius: 8px;
+    border: 1px solid var(--matrix-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.paging-simulator .playback-btn {
+    background: rgba(0, 255, 65, 0.1);
+    border: 1px solid var(--matrix-primary);
+    color: var(--matrix-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.paging-simulator .playback-btn:hover:not(:disabled) {
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+    transform: translateY(-2px);
+}
+
+.paging-simulator .playback-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.paging-simulator .playback-btn.play-pause {
+    background: rgba(0, 212, 255, 0.15);
+    border-color: var(--matrix-secondary);
+    color: var(--matrix-secondary);
+    font-weight: 700;
+}
+
+.paging-simulator .playback-btn.play-pause:hover:not(:disabled) {
+    background: rgba(0, 212, 255, 0.25);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+.paging-simulator .step-counter {
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--matrix-primary);
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Speed Control */
+.paging-simulator .speed-control {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 65, 0.03);
+    border-radius: 8px;
+    border: 1px solid var(--matrix-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.paging-simulator .speed-control label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--matrix-text-dim);
+    font-weight: 600;
+}
+
+.paging-simulator .speed-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.paging-simulator .speed-btn {
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--matrix-border);
+    color: var(--matrix-text-dim);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.paging-simulator .speed-btn.active {
+    background: var(--matrix-secondary);
+    border-color: var(--matrix-secondary);
+    color: var(--matrix-bg);
+}
+
+.paging-simulator .speed-btn:hover:not(.active) {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: var(--matrix-primary);
+    color: var(--matrix-primary);
+}
+
+/* Page Table */
+.paging-simulator .page-table-container {
+    min-height: 200px;
+}
+
+.paging-simulator .page-table-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.paging-simulator .page-table-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--matrix-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Courier New', monospace;
+}
+
+.paging-simulator .page-table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 255, 65, 0.03);
+    border: 1px solid var(--matrix-border);
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .page-table-row.valid {
+    border-color: var(--matrix-hit);
+}
+
+.paging-simulator .page-table-row.invalid {
+    border-color: var(--matrix-border);
+    opacity: 0.5;
+}
+
+.paging-simulator .page-table-row.current {
+    background: rgba(0, 255, 65, 0.15);
+    border-color: var(--matrix-primary);
+    border-width: 2px;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.paging-simulator .page-table-row:hover {
+    background: rgba(0, 255, 65, 0.08);
+}
+
+.paging-simulator .table-cell {
+    text-align: center;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Empty State */
+.paging-simulator .empty-state {
+    text-align: center;
+    color: var(--matrix-text-dim);
+    padding: 3rem;
+}
+
+.paging-simulator .empty-state p {
+    margin-top: 1rem;
+}
+
+/* Matrix Spinner */
+.paging-simulator .matrix-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 255, 65, 0.1);
+    border-top-color: var(--matrix-primary);
+    border-radius: 50%;
+    animation: pg-spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes pg-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Preset Dropdown */
+.paging-simulator .preset-dropdown-wrapper {
+    position: relative;
+}
+
+.paging-simulator .preset-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    background: var(--matrix-card);
+    border: 1px solid var(--matrix-primary);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.paging-simulator .preset-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--matrix-border);
+    transition: all 0.2s ease;
+}
+
+.paging-simulator .preset-item:last-child {
+    border-bottom: none;
+}
+
+.paging-simulator .preset-item:hover {
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.paging-simulator .preset-name {
+    font-weight: 700;
+    color: var(--matrix-primary);
+    margin-bottom: 0.25rem;
+}
+
+.paging-simulator .preset-desc {
+    font-size: 0.85rem;
+    color: var(--matrix-text-dim);
+}
+
+/* Address Translation Result */
+.paging-simulator .translation-result {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--matrix-primary);
+    border-radius: 8px;
+}
+
+.paging-simulator .result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.paging-simulator .result-row .value {
+    font-weight: 700;
+    color: var(--matrix-primary);
+}
+
+.paging-simulator .result-row .value.fault {
+    color: var(--matrix-fault);
+}
+
+/* Export Buttons */
+.paging-simulator .export-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    justify-content: center;
+}
+
+.paging-simulator .export-btn {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid var(--matrix-secondary);
+    color: var(--matrix-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .export-btn:hover {
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+/* Help Modal */
+.paging-simulator .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.paging-simulator .modal-content {
+    background: var(--matrix-card);
+    border: 2px solid var(--matrix-primary);
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
+}
+
+.paging-simulator .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--matrix-border);
+}
+
+.paging-simulator .modal-header h2 {
+    color: var(--matrix-primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.paging-simulator .modal-close {
+    background: rgba(255, 0, 85, 0.1);
+    border: 1px solid var(--matrix-fault);
+    color: var(--matrix-fault);
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.paging-simulator .modal-close:hover {
+    background: rgba(255, 0, 85, 0.2);
+    transform: rotate(90deg);
+}
+
+.paging-simulator .modal-body {
+    padding: 1.5rem;
+}
+
+.paging-simulator .modal-body section {
+    margin-bottom: 1.5rem;
+}
+
+.paging-simulator .modal-body h3 {
+    color: var(--matrix-primary);
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+.paging-simulator .modal-body ol,
+.paging-simulator .modal-body ul {
+    margin-left: 1.5rem;
+    line-height: 1.8;
+}
+
+.paging-simulator .modal-body li {
+    margin-bottom: 0.5rem;
+}
+
+.paging-simulator .modal-body p {
+    line-height: 1.6;
+    margin: 0.5rem 0;
+}
+
+.paging-simulator .algo-desc {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(0, 255, 65, 0.05);
+    border-left: 3px solid var(--matrix-primary);
+    border-radius: 4px;
+}
+
+.paging-simulator .algo-desc strong {
+    color: var(--matrix-primary);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.paging-simulator .algo-desc p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--matrix-text-dim);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .paging-simulator .paging-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .paging-simulator .control-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .paging-simulator .paging-header {
+        padding: 3rem 1rem 1.5rem;
+    }
+
+    .paging-simulator .matrix-title {
+        font-size: 2rem;
+    }
+
+    .paging-simulator .paging-layout {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .paging-simulator .pg-back-button {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+        justify-content: center;
+    }
+
+    .paging-simulator .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .paging-simulator .frames-container {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .paging-simulator .control-section {
+        grid-template-columns: 1fr;
+    }
+
+    .paging-simulator .playback-controls {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .paging-simulator .help-button {
+        position: fixed;
+        top: auto;
+        bottom: 2rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+    }
+
+    .paging-simulator .comparison-table,
+    .paging-simulator .comparison-header,
+    .paging-simulator .comparison-row {
+        font-size: 0.8rem;
+        gap: 0.5rem;
+    }
+
+    .paging-simulator .page-table-grid {
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile - Extra Small Screens */
+@media (max-width: 480px) {
+    .paging-simulator {
+        overflow-x: hidden;
+    }
+
+    .paging-simulator .paging-header {
+        padding: 2rem 0.75rem 1rem;
+    }
+
+    .paging-simulator .matrix-title {
+        font-size: 1.5rem;
+    }
+
+    .paging-simulator .header-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .paging-simulator .help-button {
+        right: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+        height: 2rem;
+        bottom: .5rem;
+    }
+
+    .paging-simulator .paging-layout {
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+
+    .paging-simulator .matrix-card {
+        padding: 1rem;
+    }
+
+    .paging-simulator .matrix-card h3 {
+        font-size: 1rem;
+    }
+
+    /* Make stats single column on very small screens */
+    .paging-simulator .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    /* Smaller buttons */
+    .paging-simulator .matrix-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .paging-simulator .button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .paging-simulator .button-group .matrix-button {
+        width: 100%;
+    }
+
+    /* Compact frames display */
+    .paging-simulator .frames-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+
+    .paging-simulator .memory-frame {
+        min-width: 60px;
+        height: 60px;
+        font-size: 0.85rem;
+    }
+
+    /* Compact playback controls */
+    .paging-simulator .playback-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .paging-simulator .control-btn {
+        padding: 0.5rem;
+        font-size: 1rem;
+        min-width: 40px;
+    }
+
+    .paging-simulator .step-counter {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .paging-simulator .speed-controls {
+        gap: 0.25rem;
+    }
+
+    .paging-simulator .speed-btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    /* Comparison table - scroll horizontally */
+    .paging-simulator .comparison-section {
+        overflow-x: auto;
+    }
+
+    .paging-simulator .comparison-table {
+        min-width: 400px;
+    }
+
+    .paging-simulator .comparison-header,
+    .paging-simulator .comparison-row {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        gap: 0.25rem;
+    }
+
+    /* Page table - scroll horizontally if needed */
+    .paging-simulator .page-table-container {
+        overflow-x: auto;
+    }
+
+    .paging-simulator .page-table-grid {
+        font-size: 0.75rem;
+        min-width: 300px;
+    }
+
+    .paging-simulator .table-cell {
+        padding: 0.5rem;
+    }
+
+    /* Error notification */
+    .paging-simulator .error-notification {
+        top: 80px;
+        width: 95%;
+    }
+
+    .paging-simulator .error-content {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* Modal on mobile */
+    .paging-simulator .modal-content {
+        width: 95%;
+        max-height: 85vh;
+        margin: 1rem;
+    }
+
+    .paging-simulator .modal-header {
+        padding: 1rem;
+    }
+
+    .paging-simulator .modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .paging-simulator .modal-body {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Preset dropdown */
+    .paging-simulator .preset-dropdown {
+        max-height: 200px;
+    }
+
+    .paging-simulator .preset-item {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .paging-simulator .preset-name {
+        font-size: 0.9rem;
+    }
+
+    .paging-simulator .preset-desc {
+        font-size: 0.75rem;
+    }
+
+    /* Address translator result */
+    .paging-simulator .translation-result {
+        padding: 0.75rem;
+    }
+
+    .paging-simulator .result-row {
+        padding: 0.4rem 0;
+        font-size: 0.85rem;
+    }
+
+    /* Config inputs */
+    .paging-simulator .config-group label {
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .matrix-input,
+    .paging-simulator select,
+    .paging-simulator .matrix-textarea {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    /* Export buttons */
+    .paging-simulator .export-buttons {
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .paging-simulator .export-btn {
+        width: 100%;
+    }
+}
+
+/* Extra Small Phones - 400px */
+@media (max-width: 400px) {
+    .paging-simulator .paging-header {
+        padding: 1.5rem 0.5rem 0.75rem;
+    }
+
+    .paging-simulator .matrix-title {
+        font-size: 1.3rem;
+        letter-spacing: 0.05em;
+    }
+
+    .paging-simulator .header-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .help-button {
+        right: 0.5rem;
+        bottom: 0.5rem;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.7rem;
+        height: 1.8rem;
+    }
+
+    .paging-simulator .paging-layout {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .paging-simulator .matrix-card {
+        padding: 0.75rem;
+    }
+
+    .paging-simulator .matrix-card h3 {
+        font-size: 0.9rem;
+    }
+
+    .paging-simulator .frames-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+
+    .paging-simulator .memory-frame {
+        min-width: 50px;
+        height: 50px;
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .control-btn {
+        padding: 0.4rem;
+        font-size: 0.9rem;
+        min-width: 35px;
+    }
+
+    .paging-simulator .step-counter {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .paging-simulator .speed-btn {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .paging-simulator .matrix-button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .paging-simulator .config-group label {
+        font-size: 0.7rem;
+    }
+
+    .paging-simulator .matrix-input,
+    .paging-simulator select,
+    .paging-simulator .matrix-textarea {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .paging-simulator .comparison-header,
+    .paging-simulator .comparison-row {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+
+    .paging-simulator .page-table-grid {
+        font-size: 0.7rem;
+    }
+
+    .paging-simulator .table-cell {
+        padding: 0.4rem;
+    }
+
+    .paging-simulator .error-notification {
+        top: 70px;
+        width: 96%;
+    }
+
+    .paging-simulator .error-content {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .paging-simulator .modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .paging-simulator .modal-body {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Ultra Small Phones - 300px */
+@media (max-width: 300px) {
+    .paging-simulator .paging-header {
+        padding: 1rem 0.25rem 0.5rem;
+    }
+
+    .paging-simulator .matrix-title {
+        font-size: 1.1rem;
+        letter-spacing: 0.03em;
+    }
+
+    .paging-simulator .header-subtitle {
+        font-size: 0.65rem;
+    }
+
+    .paging-simulator .help-button {
+        right: 0.25rem;
+        bottom: 0.25rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.65rem;
+        height: 1.6rem;
+    }
+
+    .paging-simulator .paging-layout {
+        padding: 0.25rem;
+        gap: 0.4rem;
+    }
+
+    .paging-simulator .matrix-card {
+        padding: 0.5rem;
+    }
+
+    .paging-simulator .matrix-card h3 {
+        font-size: 0.85rem;
+    }
+
+    .paging-simulator .frames-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.3rem;
+    }
+
+    .paging-simulator .memory-frame {
+        min-width: 45px;
+        height: 45px;
+        font-size: 0.7rem;
+    }
+
+    .paging-simulator .control-btn {
+        padding: 0.3rem;
+        font-size: 0.85rem;
+        min-width: 32px;
+    }
+
+    .paging-simulator .step-counter {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .paging-simulator .speed-controls {
+        gap: 0.2rem;
+    }
+
+    .paging-simulator .speed-btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.65rem;
+    }
+
+    .paging-simulator .matrix-button {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .config-group label {
+        font-size: 0.65rem;
+    }
+
+    .paging-simulator .matrix-input,
+    .paging-simulator select,
+    .paging-simulator .matrix-textarea {
+        padding: 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .comparison-table {
+        min-width: 280px;
+    }
+
+    .paging-simulator .comparison-header,
+    .paging-simulator .comparison-row {
+        font-size: 0.65rem;
+        padding: 0.35rem;
+    }
+
+    .paging-simulator .page-table-grid {
+        font-size: 0.65rem;
+        min-width: 250px;
+    }
+
+    .paging-simulator .table-cell {
+        padding: 0.35rem;
+    }
+
+    .paging-simulator .error-notification {
+        top: 60px;
+        width: 98%;
+    }
+
+    .paging-simulator .error-content {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .paging-simulator .error-close {
+        width: 24px;
+        height: 24px;
+        font-size: 1rem;
+    }
+
+    .paging-simulator .modal-content {
+        width: 98%;
+        max-height: 90vh;
+    }
+
+    .paging-simulator .modal-header {
+        padding: 0.75rem;
+    }
+
+    .paging-simulator .modal-header h2 {
+        font-size: 1rem;
+    }
+
+    .paging-simulator .modal-body {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .paging-simulator .preset-name {
+        font-size: 0.85rem;
+    }
+
+    .paging-simulator .preset-desc {
+        font-size: 0.7rem;
+    }
+
+    .paging-simulator .result-row {
+        padding: 0.35rem 0;
+        font-size: 0.8rem;
+    }
+}

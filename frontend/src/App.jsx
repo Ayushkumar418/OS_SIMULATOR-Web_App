@@ -3,6 +3,7 @@ import Dashboard from './pages/Dashboard';
 import CPUScheduler from './pages/CPUScheduler';
 import MemoryManagement from './pages/MemoryManagement';
 import ContiguousAllocator from './pages/ContiguousAllocator';
+import PagingSimulator from './pages/PagingSimulator';
 import FileSystem from './pages/FileSystem';
 import './App.css';
 
@@ -15,6 +16,7 @@ function App() {
                     <Route path="/cpu-scheduler" element={<CPUScheduler />} />
                     <Route path="/memory" element={<MemoryManagement />} />
                     <Route path="/memory/contiguous" element={<ContiguousAllocator />} />
+                    <Route path="/memory/paging" element={<PagingSimulator />} />
                     <Route path="/filesystem" element={<FileSystem />} />
                 </Routes>
             </div>

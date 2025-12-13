@@ -22,7 +22,7 @@ function MemoryManagement() {
             icon: '📄',
             description: 'Simulate paged memory management with page replacement algorithms (FIFO, LRU, Optimal) and page fault analysis.',
             features: ['Page Replacement', 'Page Fault Analysis', 'TLB Simulation', 'Multi-level Paging'],
-            status: 'coming-soon',
+            status: 'implemented',
             path: '/memory/paging',
             color: '#8b5cf6'
         },
