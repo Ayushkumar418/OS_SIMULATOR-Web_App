@@ -1,3 +1,50 @@
+/* Back Button */
+.ca-back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    color: var(--clr-text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ca-back-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--clr-accent-blue);
+    transform: translateX(-4px);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+}
+
+/* Mobile: Adjust back button for smaller screens */
+@media (max-width: 768px) {
+    .ca-back-button {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 1rem;
+        font-size: 0.875rem;
+        padding: 0.625rem 1rem;
+        width: calc(100% - 2rem);
+        justify-content: center;
+    }
+
+    .ca-back-button:hover {
+        transform: none;
+    }
+}
+
 .contiguous-allocator {
     min-height: 100vh;
     background: var(--clr-bg-primary);

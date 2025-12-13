@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import './ContiguousAllocator.css';
@@ -453,9 +454,15 @@ const ContiguousAllocator = () => {
     };
 
     const fragmentation = memoryState?.fragmentation || {};
+    const navigate = useNavigate();
 
     return (
         <div className="contiguous-allocator">
+            {/* Back Button */}
+            <button className="ca-back-button" onClick={() => navigate('/memory')}>
+                ← Back to Memory Management
+            </button>
+
             <header className="allocator-header">
                 <h1>Contiguous Memory Allocation</h1>
                 <p>Visualize and compare memory allocation algorithms</p>
