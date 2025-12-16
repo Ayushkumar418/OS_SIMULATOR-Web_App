@@ -27,6 +27,8 @@ const CPUScheduler = () => {
     const [comparisonLoading, setComparisonLoading] = useState(false);
     const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
+    const [sortBy, setSortBy] = useState('pid');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     // Algorithm descriptions and how they work
     const algorithmInfo = {
@@ -118,6 +120,39 @@ const CPUScheduler = () => {
         loadScenarios();
     }, []);
 
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            // Don't trigger if typing in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            switch (e.key.toLowerCase()) {
+                case 'r':
+                    if (!loading && processes.length > 0 && !comparisonMode) {
+                        runSimulation();
+                    }
+                    break;
+                case 'c':
+                    resetSimulation();
+                    break;
+                case 'h':
+                    setShowHelp(prev => !prev);
+                    break;
+                case 'escape':
+                    setShowHelp(false);
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [loading, processes, comparisonMode]);
+
+
     const loadScenarios = async () => {
         try {
             const response = await scenarioAPI.list();
@@ -172,6 +207,86 @@ const CPUScheduler = () => {
         setError(null);
     };
 
+    // Export configuration to JSON file
+    const exportConfig = () => {
+        const config = {
+            processes,
+            algorithm,
+            timeQuantum,
+            preemptive,
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cpu-scheduler-config-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // Import configuration from JSON file
+    const importConfig = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const config = JSON.parse(e.target.result);
+
+                let importedProcesses = [];
+                let importedAlgorithm = algorithm;
+                let importedQuantum = timeQuantum;
+                let importedPreemptive = preemptive;
+
+                if (config.processes && Array.isArray(config.processes)) {
+                    importedProcesses = config.processes;
+                    setProcesses(config.processes);
+                }
+                if (config.algorithm) {
+                    importedAlgorithm = config.algorithm;
+                    setAlgorithm(config.algorithm);
+                }
+                if (config.timeQuantum) {
+                    importedQuantum = config.timeQuantum;
+                    setTimeQuantum(config.timeQuantum);
+                }
+                if (typeof config.preemptive === 'boolean') {
+                    importedPreemptive = config.preemptive;
+                    setPreemptive(config.preemptive);
+                }
+
+                setError(null);
+
+                // Auto-run simulation if processes exist
+                if (importedProcesses.length > 0) {
+                    setLoading(true);
+                    try {
+                        const response = await schedulerAPI.runSimulation(
+                            importedAlgorithm,
+                            importedProcesses,
+                            importedQuantum,
+                            importedPreemptive
+                        );
+                        setSimulation(response.data);
+                    } catch (err) {
+                        setError(err.response?.data?.detail || 'Simulation failed');
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            } catch (err) {
+                setError('Invalid configuration file format');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Reset input
+    };
+
     const addProcess = (process) => {
         // Check for duplicate PID
         const existingProcess = processes.find(p => p.pid === process.pid);
@@ -188,6 +303,66 @@ const CPUScheduler = () => {
     const removeProcess = (pid) => {
         setProcesses(processes.filter(p => p.pid !== pid));
         setSimulation(null);
+    };
+
+    // Sort completed processes for table display
+    const getSortedProcesses = () => {
+        if (!simulation?.completed_processes) return [];
+
+        const sorted = [...simulation.completed_processes].sort((a, b) => {
+            let aVal, bVal;
+
+            switch (sortBy) {
+                case 'pid':
+                    aVal = a.pid;
+                    bVal = b.pid;
+                    break;
+                case 'arrival':
+                    aVal = a.arrival_time;
+                    bVal = b.arrival_time;
+                    break;
+                case 'burst':
+                    aVal = a.burst_time;
+                    bVal = b.burst_time;
+                    break;
+                case 'completion':
+                    aVal = a.completion_time || 0;
+                    bVal = b.completion_time || 0;
+                    break;
+                case 'waiting':
+                    aVal = a.wait_time;
+                    bVal = b.wait_time;
+                    break;
+                case 'turnaround':
+                    aVal = a.turnaround_time;
+                    bVal = b.turnaround_time;
+                    break;
+                case 'response':
+                    aVal = a.response_time || 0;
+                    bVal = b.response_time || 0;
+                    break;
+                default:
+                    aVal = a.pid;
+                    bVal = b.pid;
+            }
+
+            if (sortOrder === 'asc') {
+                return aVal - bVal;
+            } else {
+                return bVal - aVal;
+            }
+        });
+
+        return sorted;
+    };
+
+    const handleSort = (field) => {
+        if (sortBy === field) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(field);
+            setSortOrder('asc');
+        }
     };
 
     // Comparison Mode: Run all algorithms and compare
@@ -490,6 +665,29 @@ const CPUScheduler = () => {
                             loading={loading}
                             disabled={processes.length === 0}
                         />
+
+                        {/* Import/Export Card */}
+                        <div className="card import-export-card">
+                            <h3>💾 Save / Load</h3>
+                            <div className="import-export-buttons">
+                                <button
+                                    className="btn btn-export"
+                                    onClick={exportConfig}
+                                    disabled={processes.length === 0}
+                                >
+                                    📤 Export Config
+                                </button>
+                                <label className="btn btn-import">
+                                    📥 Import Config
+                                    <input
+                                        type="file"
+                                        accept=".json"
+                                        onChange={importConfig}
+                                        style={{ display: 'none' }}
+                                    />
+                                </label>
+                            </div>
+                        </div>
                     </aside>
 
                     {/* Right Panel - Visualization */}
@@ -539,22 +737,39 @@ const CPUScheduler = () => {
                                     <ExplanationPanel explanations={simulation.explanations} />
 
                                     <div className="card">
-                                        <h3>Process Details</h3>
+                                        <div className="process-details-header">
+                                            <h3>Process Details</h3>
+                                            <span className="sort-hint">Click column headers to sort</span>
+                                        </div>
                                         <div className="process-table-wrapper">
                                             <table className="process-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>PID</th>
-                                                        <th>Arrival</th>
-                                                        <th>Burst</th>
-                                                        <th>Completion Time</th>
-                                                        <th>Waiting Time</th>
-                                                        <th>Turnaround Time</th>
-                                                        <th>Response Time</th>
+                                                        <th className={`sortable ${sortBy === 'pid' ? 'active' : ''}`} onClick={() => handleSort('pid')}>
+                                                            PID {sortBy === 'pid' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'arrival' ? 'active' : ''}`} onClick={() => handleSort('arrival')}>
+                                                            Arrival {sortBy === 'arrival' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'burst' ? 'active' : ''}`} onClick={() => handleSort('burst')}>
+                                                            Burst {sortBy === 'burst' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'completion' ? 'active' : ''}`} onClick={() => handleSort('completion')}>
+                                                            Completion {sortBy === 'completion' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'waiting' ? 'active' : ''}`} onClick={() => handleSort('waiting')}>
+                                                            Waiting {sortBy === 'waiting' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'turnaround' ? 'active' : ''}`} onClick={() => handleSort('turnaround')}>
+                                                            Turnaround {sortBy === 'turnaround' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
+                                                        <th className={`sortable ${sortBy === 'response' ? 'active' : ''}`} onClick={() => handleSort('response')}>
+                                                            Response {sortBy === 'response' && (sortOrder === 'asc' ? '↑' : '↓')}
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {simulation.completed_processes.map(p => (
+                                                    {getSortedProcesses().map(p => (
                                                         <tr key={p.pid}>
                                                             <td><strong>P{p.pid}</strong></td>
                                                             <td>{p.arrival_time}</td>
@@ -649,6 +864,28 @@ const CPUScheduler = () => {
                                         <li><strong>Response Time</strong> - Time until first CPU allocation</li>
                                         <li><strong>Throughput</strong> - Processes completed per time unit</li>
                                     </ul>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>⌨️ Keyboard Shortcuts</h3>
+                                    <div className="shortcuts-grid">
+                                        <div className="shortcut-item">
+                                            <kbd>R</kbd>
+                                            <span>Run Simulation</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>C</kbd>
+                                            <span>Clear/Reset</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>H</kbd>
+                                            <span>Toggle Help</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>Esc</kbd>
+                                            <span>Close Modal</span>
+                                        </div>
+                                    </div>
                                 </section>
                             </div>
                         </motion.div>

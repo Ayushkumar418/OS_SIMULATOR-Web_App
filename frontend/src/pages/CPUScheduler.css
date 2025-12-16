@@ -612,6 +612,67 @@
     font-size: 0.9rem;
 }
 
+/* Import/Export Card */
+.import-export-card {
+    background: linear-gradient(135deg, rgba(187, 125, 255, 0.03), rgba(0, 212, 255, 0.03)) !important;
+    border-color: rgba(187, 125, 255, 0.3) !important;
+}
+
+.import-export-card h3 {
+    color: var(--cs-accent) !important;
+    margin-bottom: 1rem;
+}
+
+.import-export-buttons {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.btn-export,
+.btn-import {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.btn-export {
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: var(--cs-primary);
+}
+
+.btn-export:hover:not(:disabled) {
+    background: rgba(0, 255, 136, 0.2);
+    border-color: var(--cs-primary);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.btn-export:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-import {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    color: var(--cs-secondary);
+}
+
+.btn-import:hover {
+    background: rgba(0, 212, 255, 0.2);
+    border-color: var(--cs-secondary);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
 /* Comparison Mode Card */
 .comparison-mode-card {
     background: linear-gradient(135deg, rgba(0, 255, 136, 0.03), rgba(0, 212, 255, 0.03)) !important;
@@ -928,6 +989,24 @@
     background: var(--cs-secondary);
 }
 
+/* Process Details Header */
+.process-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.process-details-header h3 {
+    margin: 0;
+}
+
+.sort-hint {
+    font-size: 0.75rem;
+    color: var(--cs-text-dim);
+    font-style: italic;
+}
+
 /* Process Table */
 .process-table-wrapper {
     overflow-x: auto;
@@ -964,6 +1043,24 @@
     font-size: 0.75rem;
     letter-spacing: 0.08em;
     border-bottom: 1px solid var(--cs-border);
+}
+
+.process-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.process-table th.sortable:hover {
+    background: rgba(0, 255, 136, 0.2);
+    color: #fff;
+}
+
+.process-table th.sortable.active {
+    background: rgba(0, 255, 136, 0.25);
+    color: #fff;
+    box-shadow: inset 0 -2px 0 var(--cs-primary);
 }
 
 .process-table tbody tr {
@@ -1158,6 +1255,42 @@
     color: var(--cs-text-dim);
 }
 
+/* Keyboard Shortcuts */
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.shortcut-item kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 0.25rem 0.5rem;
+    background: linear-gradient(135deg, var(--cs-primary), #00cc6a);
+    color: #0a0e14;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.shortcut-item span {
+    color: var(--cs-text-dim);
+    font-size: 0.85rem;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .scheduler-layout {
@@ -1193,5 +1326,74 @@
 
     .algorithm-grid {
         grid-template-columns: 1fr;
+    }
+
+    .shortcuts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .process-table-wrapper {
+        max-width: calc(100vw - 2rem);
+    }
+
+    .gantt-wrapper {
+        max-width: calc(100vw - 2rem);
+    }
+
+    .cpu-scheduler .card {
+        padding: 1rem;
+    }
+
+    .process-item {
+        flex-wrap: wrap;
+    }
+
+    .process-info {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .back-link {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .info-toggle-btn {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .scenario-item {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .checkbox-label {
+        padding: 0.4rem 0.5rem;
+    }
+
+    .checkbox-label span {
+        font-size: 0.8rem;
+    }
+
+    .help-modal {
+        max-height: 90vh;
+        margin: 1rem;
+    }
+
+    .help-header {
+        padding: 1rem;
+    }
+
+    .help-content {
+        padding: 1rem;
     }
 }
