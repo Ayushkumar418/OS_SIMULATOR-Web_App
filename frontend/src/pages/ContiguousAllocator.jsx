@@ -22,6 +22,7 @@ const ContiguousAllocator = () => {
     const [comparisonMode, setComparisonMode] = useState(false);
     const [comparisonResults, setComparisonResults] = useState(null);
     const [comparisonLoading, setComparisonLoading] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     // Fetch initial state
     useEffect(() => {
@@ -466,6 +467,9 @@ const ContiguousAllocator = () => {
             <header className="allocator-header">
                 <h1>Contiguous Memory Allocation</h1>
                 <p>Visualize and compare memory allocation algorithms</p>
+                <button className="help-btn" onClick={() => setShowHelp(true)}>
+                    ❓ Help
+                </button>
             </header>
 
             <div className="allocator-layout">
@@ -729,11 +733,23 @@ const ContiguousAllocator = () => {
 
                 {/* Right Panel - Visualization */}
                 <main className="visualization-panel">
-                    {error && (
-                        <div className="alert alert-error">
-                            <strong>Error:</strong> {error}
-                        </div>
-                    )}
+                    {/* Error Popup Notification */}
+                    <AnimatePresence>
+                        {error && (
+                            <motion.div
+                                className="error-notification"
+                                initial={{ opacity: 0, y: -50 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -50 }}
+                            >
+                                <div className="error-content">
+                                    <span className="error-icon">❌</span>
+                                    <span className="error-text">{error}</span>
+                                    <button className="error-close" onClick={() => setError(null)}>×</button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Memory Statistics at top */}
                     {memoryState && memoryState.initialized && (
@@ -794,13 +810,35 @@ const ContiguousAllocator = () => {
                                                     exit={{ opacity: 0, scale: 0.8 }}
                                                     transition={{ duration: 0.3 }}
                                                     onClick={() => block.allocated && handleDeallocate(block.process_id)}
-                                                    title={block.allocated ? `Click to deallocate P${block.process_id}` : 'Free'}
                                                 >
                                                     <div className="block-content">
                                                         <span className="block-label">
                                                             {block.allocated ? `P${block.process_id}` : 'FREE'}
                                                         </span>
                                                         <span className="block-size">{block.size} KB</span>
+                                                    </div>
+                                                    {/* Hover Tooltip */}
+                                                    <div className="block-tooltip">
+                                                        <div className="tooltip-title">
+                                                            {block.allocated ? `Process ${block.process_id}` : 'Free Block'}
+                                                        </div>
+                                                        <div className="tooltip-row">
+                                                            <span>Start:</span>
+                                                            <span>{block.start} KB</span>
+                                                        </div>
+                                                        <div className="tooltip-row">
+                                                            <span>End:</span>
+                                                            <span>{block.end} KB</span>
+                                                        </div>
+                                                        <div className="tooltip-row">
+                                                            <span>Size:</span>
+                                                            <span>{block.size} KB</span>
+                                                        </div>
+                                                        {block.allocated && (
+                                                            <div className="tooltip-row" style={{ color: '#ff6b6b', marginTop: '0.5rem' }}>
+                                                                <span>🗑️ Click to free</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </motion.div>
                                             );
@@ -811,7 +849,24 @@ const ContiguousAllocator = () => {
                                 {/* Address Labels */}
                                 <div className="address-labels">
                                     <span>0</span>
+                                    <span>{Math.floor(memoryState.total_memory / 4)}</span>
+                                    <span>{Math.floor(memoryState.total_memory / 2)}</span>
+                                    <span>{Math.floor((memoryState.total_memory * 3) / 4)}</span>
                                     <span>{memoryState.total_memory}</span>
+                                </div>
+
+                                {/* Memory Legend */}
+                                <div className="memory-legend">
+                                    <div className="legend-item">
+                                        <div className="legend-color free"></div>
+                                        <span>Free Space</span>
+                                    </div>
+                                    {memoryState.blocks.filter(b => b.allocated).slice(0, 5).map((block, i) => (
+                                        <div key={i} className="legend-item">
+                                            <div className="legend-color" style={{ backgroundColor: getBlockColor(block) }}></div>
+                                            <span>P{block.process_id}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         ) : (
@@ -914,6 +969,81 @@ const ContiguousAllocator = () => {
                     )}
                 </main>
             </div>
+
+            {/* Help Modal */}
+            <AnimatePresence>
+                {showHelp && (
+                    <motion.div
+                        className="help-modal-overlay"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowHelp(false)}
+                    >
+                        <motion.div
+                            className="help-modal"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="help-header">
+                                <h2>📚 Contiguous Memory Allocation</h2>
+                                <button className="help-close" onClick={() => setShowHelp(false)}>×</button>
+                            </div>
+                            <div className="help-content">
+                                <section className="help-section">
+                                    <h3>🎯 What is Contiguous Allocation?</h3>
+                                    <p>Each process is allocated a single continuous block of memory. The OS maintains a list of free and allocated memory blocks.</p>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>📊 Allocation Algorithms</h3>
+                                    <div className="algorithm-grid">
+                                        <div className="algo-card">
+                                            <strong>First Fit</strong>
+                                            <p>Allocates the first hole that is big enough. Fast but can cause fragmentation at the start.</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>Best Fit</strong>
+                                            <p>Allocates the smallest hole that is big enough. Produces smallest leftover holes.</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>Worst Fit</strong>
+                                            <p>Allocates the largest hole. Leaves larger remaining holes for future allocations.</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>Next Fit</strong>
+                                            <p>Like First Fit but starts searching from the last allocation point.</p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>🔧 How to Use</h3>
+                                    <ol>
+                                        <li>Set <strong>Total Memory</strong> size and click Apply</li>
+                                        <li>Choose an <strong>Allocation Algorithm</strong></li>
+                                        <li>Enter <strong>Process ID</strong> and <strong>Size</strong></li>
+                                        <li>Click <strong>Allocate Memory</strong></li>
+                                        <li><strong>Click on blocks</strong> to deallocate them</li>
+                                        <li>Use <strong>Compare Algorithms</strong> to see performance differences</li>
+                                    </ol>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>⚡ Tips</h3>
+                                    <ul>
+                                        <li>Hover over memory blocks to see details</li>
+                                        <li>Try preset scenarios to learn about fragmentation</li>
+                                        <li>Watch the fragmentation % as you allocate/deallocate</li>
+                                    </ul>
+                                </section>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
