@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { schedulerAPI, scenarioAPI } from '../services/api';
 import ProcessTimeline from '../components/ProcessTimeline';
 import MetricsPanel from '../components/MetricsPanel';
@@ -26,6 +26,7 @@ const CPUScheduler = () => {
     const [comparisonRecommendation, setComparisonRecommendation] = useState(null);
     const [comparisonLoading, setComparisonLoading] = useState(false);
     const [showAlgorithmInfo, setShowAlgorithmInfo] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     // Algorithm descriptions and how they work
     const algorithmInfo = {
@@ -259,6 +260,9 @@ const CPUScheduler = () => {
                         <p className="page-subtitle">Visualize CPU scheduling algorithms</p>
                     </div>
                 </div>
+                <button className="help-btn" onClick={() => setShowHelp(true)}>
+                    ❓ Help
+                </button>
             </header>
 
             <main className="page-main container">
@@ -490,11 +494,23 @@ const CPUScheduler = () => {
 
                     {/* Right Panel - Visualization */}
                     <section className="visualization-panel">
-                        {error && (
-                            <div className="alert alert-error">
-                                <strong>Error:</strong> {error}
-                            </div>
-                        )}
+                        {/* Error Popup Notification */}
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div
+                                    className="error-notification"
+                                    initial={{ opacity: 0, y: -50 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -50 }}
+                                >
+                                    <div className="error-content">
+                                        <span className="error-icon">❌</span>
+                                        <span className="error-text">{error}</span>
+                                        <button className="error-close" onClick={() => setError(null)}>×</button>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         {/* Comparison Mode Results */}
                         {comparisonMode && comparisonResults.length > 0 ? (
@@ -564,6 +580,81 @@ const CPUScheduler = () => {
                     </section>
                 </div>
             </main>
+
+            {/* Help Modal */}
+            <AnimatePresence>
+                {showHelp && (
+                    <motion.div
+                        className="help-modal-overlay"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowHelp(false)}
+                    >
+                        <motion.div
+                            className="help-modal"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="help-header">
+                                <h2>📚 CPU Scheduling Simulator</h2>
+                                <button className="help-close" onClick={() => setShowHelp(false)}>×</button>
+                            </div>
+                            <div className="help-content">
+                                <section className="help-section">
+                                    <h3>🎯 What is CPU Scheduling?</h3>
+                                    <p>CPU scheduling determines which process runs on the CPU at any given time. The scheduler selects processes from the ready queue and allocates CPU time based on the chosen algorithm.</p>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>📊 Available Algorithms</h3>
+                                    <div className="algorithm-grid">
+                                        <div className="algo-card">
+                                            <strong>FCFS</strong>
+                                            <p>First Come First Serve - executes in arrival order</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>SJF</strong>
+                                            <p>Shortest Job First - shortest burst time runs first</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>Priority</strong>
+                                            <p>Higher priority processes execute first</p>
+                                        </div>
+                                        <div className="algo-card">
+                                            <strong>Round Robin</strong>
+                                            <p>Each process gets a time quantum in turns</p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>🔧 How to Use</h3>
+                                    <ol>
+                                        <li>Select an <strong>Algorithm</strong> from the dropdown</li>
+                                        <li>Add processes with <strong>Arrival Time</strong> and <strong>Burst Time</strong></li>
+                                        <li>Click <strong>Run Simulation</strong> to see the Gantt chart</li>
+                                        <li>Enable <strong>Comparison Mode</strong> to compare all algorithms</li>
+                                        <li>Try <strong>Demo Scenarios</strong> for pre-built examples</li>
+                                    </ol>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>📈 Performance Metrics</h3>
+                                    <ul>
+                                        <li><strong>Waiting Time</strong> - Time spent in ready queue</li>
+                                        <li><strong>Turnaround Time</strong> - Total time from arrival to completion</li>
+                                        <li><strong>Response Time</strong> - Time until first CPU allocation</li>
+                                        <li><strong>Throughput</strong> - Processes completed per time unit</li>
+                                    </ul>
+                                </section>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
