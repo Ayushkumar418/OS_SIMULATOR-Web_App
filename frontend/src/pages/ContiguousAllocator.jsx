@@ -29,6 +29,39 @@ const ContiguousAllocator = () => {
         fetchMemoryState();
     }, []);
 
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            switch (e.key.toLowerCase()) {
+                case 'a':
+                    if (!loading) handleAllocate();
+                    break;
+                case 'r':
+                    handleReset();
+                    break;
+                case 'h':
+                    setShowHelp(prev => !prev);
+                    break;
+                case 'c':
+                    if (!loading) handleCompact();
+                    break;
+                case 'escape':
+                    setShowHelp(false);
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [loading, processId, processSize, algorithm, totalMemory, memoryState]);
+
+
     const fetchMemoryState = async () => {
         try {
             const response = await axios.get(`${API_BASE}/state`);
@@ -119,6 +152,7 @@ const ContiguousAllocator = () => {
             setExplanations([]);
             setError(null);
             setProcessId(1);
+            setComparisonResults(null);
 
             // Initialize with current totalMemory size by fetching state
             // The backend will use the new size on next allocation
@@ -126,6 +160,125 @@ const ContiguousAllocator = () => {
         } catch (err) {
             setError('Reset failed');
         }
+    };
+
+    // Memory Compaction - move all allocated blocks together
+    const handleCompact = async () => {
+        if (!memoryState?.blocks || memoryState.blocks.length === 0) {
+            setError('No memory to compact');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            // Get all allocated blocks sorted by start address
+            const allocatedBlocks = memoryState.blocks
+                .filter(b => b.allocated)
+                .sort((a, b) => a.start - b.start);
+
+            if (allocatedBlocks.length === 0) {
+                setError('No allocated blocks to compact');
+                setLoading(false);
+                return;
+            }
+
+            // Create compacted blocks starting from address 0
+            let currentStart = 0;
+            const compactedBlocks = allocatedBlocks.map(block => {
+                const newBlock = {
+                    ...block,
+                    start: currentStart,
+                    end: currentStart + block.size
+                };
+                currentStart += block.size;
+                return newBlock;
+            });
+
+            // Add single free block at the end
+            const totalUsed = compactedBlocks.reduce((sum, b) => sum + b.size, 0);
+            const freeSize = memoryState.total_size - totalUsed;
+
+            if (freeSize > 0) {
+                compactedBlocks.push({
+                    allocated: false,
+                    start: currentStart,
+                    end: memoryState.total_size,
+                    size: freeSize,
+                    process_id: null
+                });
+            }
+
+            // Update state
+            setMemoryState({
+                ...memoryState,
+                blocks: compactedBlocks,
+                fragmentation: 0 // No fragmentation after compaction
+            });
+
+            setExplanations(prev => [...prev,
+            `📦 Compaction: Memory compacted - ${allocatedBlocks.length} blocks moved together, creating ${freeSize}KB contiguous free space`
+            ]);
+
+        } catch (err) {
+            setError('Compaction failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Export configuration to JSON
+    const exportConfig = () => {
+        const config = {
+            memoryState,
+            algorithm,
+            totalMemory,
+            processId,
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `contiguous-allocator-state-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // Import configuration from JSON
+    const importConfig = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const config = JSON.parse(e.target.result);
+
+                if (config.memoryState) {
+                    setMemoryState(config.memoryState);
+                }
+                if (config.algorithm) {
+                    setAlgorithm(config.algorithm);
+                }
+                if (config.totalMemory) {
+                    setTotalMemory(config.totalMemory);
+                }
+                if (config.processId) {
+                    setProcessId(config.processId);
+                }
+
+                setError(null);
+            } catch (err) {
+                setError('Invalid configuration file');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
     };
 
     // Preset Scenarios
@@ -551,13 +704,45 @@ const ContiguousAllocator = () => {
                             {loading ? '⏳ Allocating...' : '➕ Allocate Memory'}
                         </button>
 
-                        <button
-                            className="btn btn-secondary"
-                            onClick={handleReset}
-                            style={{ marginTop: '10px' }}
-                        >
-                            🔄 Reset Memory
-                        </button>
+                        <div className="action-buttons-row">
+                            <button
+                                className="btn btn-secondary"
+                                onClick={handleReset}
+                            >
+                                🔄 Reset
+                            </button>
+                            <button
+                                className="btn btn-compact"
+                                onClick={handleCompact}
+                                disabled={loading || !memoryState?.blocks?.some(b => b.allocated)}
+                                title="Compact memory to eliminate fragmentation"
+                            >
+                                📦 Compact
+                            </button>
+                        </div>
+
+                        {/* Import/Export Section */}
+                        <div className="import-export-section">
+                            <h4>� Save / Load State</h4>
+                            <div className="import-export-buttons">
+                                <button
+                                    className="btn btn-export"
+                                    onClick={exportConfig}
+                                    disabled={!memoryState?.blocks}
+                                >
+                                    📤 Export
+                                </button>
+                                <label className="btn btn-import">
+                                    📥 Import
+                                    <input
+                                        type="file"
+                                        accept=".json"
+                                        onChange={importConfig}
+                                        style={{ display: 'none' }}
+                                    />
+                                </label>
+                            </div>
+                        </div>
 
                         <div className="form-group" style={{ marginTop: '20px' }}>
                             <label>
@@ -1037,7 +1222,35 @@ const ContiguousAllocator = () => {
                                         <li>Hover over memory blocks to see details</li>
                                         <li>Try preset scenarios to learn about fragmentation</li>
                                         <li>Watch the fragmentation % as you allocate/deallocate</li>
+                                        <li>Use <strong>Compact</strong> to eliminate fragmentation</li>
+                                        <li><strong>Export/Import</strong> to save and restore memory state</li>
                                     </ul>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>⌨️ Keyboard Shortcuts</h3>
+                                    <div className="shortcuts-grid">
+                                        <div className="shortcut-item">
+                                            <kbd>A</kbd>
+                                            <span>Allocate Memory</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>R</kbd>
+                                            <span>Reset Memory</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>H</kbd>
+                                            <span>Toggle Help</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>C</kbd>
+                                            <span>Compact Memory</span>
+                                        </div>
+                                        <div className="shortcut-item">
+                                            <kbd>Esc</kbd>
+                                            <span>Close Modal</span>
+                                        </div>
+                                    </div>
                                 </section>
                             </div>
                         </motion.div>

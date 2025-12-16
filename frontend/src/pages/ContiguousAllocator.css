@@ -1066,3 +1066,209 @@
         max-height: 90vh;
     }
 }
+
+/* Action Buttons Row */
+.action-buttons-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 10px;
+}
+
+.action-buttons-row .btn {
+    flex: 1;
+}
+
+/* Compact Button */
+.btn-compact {
+    background: linear-gradient(135deg, rgba(187, 125, 255, 0.1), rgba(187, 125, 255, 0.2));
+    border: 1px solid rgba(187, 125, 255, 0.4);
+    color: #bb7dff;
+}
+
+.btn-compact:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(187, 125, 255, 0.2), rgba(187, 125, 255, 0.3));
+    box-shadow: 0 0 15px rgba(187, 125, 255, 0.3);
+}
+
+.btn-compact:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Import/Export Section */
+.import-export-section {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 255, 136, 0.1);
+}
+
+.import-export-section h4 {
+    color: var(--ca-secondary);
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.import-export-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.btn-export {
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: var(--ca-primary);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.btn-export:hover:not(:disabled) {
+    background: rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+}
+
+.btn-export:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-import {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    color: var(--ca-secondary);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-import:hover {
+    background: rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+}
+
+/* Fragmentation Chart */
+.fragmentation-chart-card {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.03), rgba(255, 215, 0, 0.03)) !important;
+    border-color: rgba(255, 107, 107, 0.2) !important;
+}
+
+.fragmentation-chart-card h3 {
+    color: #ffd93d !important;
+}
+
+.frag-chart-container {
+    padding: 1rem 0;
+}
+
+.frag-chart {
+    display: flex;
+    gap: 0.5rem;
+    height: 120px;
+    align-items: flex-end;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.frag-bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.frag-bar {
+    width: 100%;
+    min-height: 8px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.frag-bar:hover {
+    filter: brightness(1.2);
+    transform: scaleY(1.05);
+}
+
+.frag-value {
+    font-size: 0.65rem;
+    color: #0a0e14;
+    font-weight: 700;
+    padding-top: 2px;
+}
+
+.frag-label {
+    font-size: 0.7rem;
+    color: var(--ca-text-dim);
+    margin-top: 4px;
+}
+
+.chart-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ca-text-dim);
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+/* Keyboard Shortcuts in Help */
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.shortcut-item kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 0.25rem 0.5rem;
+    background: linear-gradient(135deg, var(--ca-primary), #00cc6a);
+    color: #0a0e14;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.shortcut-item span {
+    color: var(--ca-text-dim);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+    .shortcuts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .import-export-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons-row {
+        flex-direction: column;
+    }
+}
