@@ -302,8 +302,9 @@ const PagingSimulator = () => {
             setMemoryState(response.data.memory_state);
             setPageTable(response.data.page_table || []);
         } catch (err) {
-            console.error('Initialization error:', err);
-            setError('Failed to initialize paging system');
+            // Backend is optional - simulation runs entirely in frontend
+            // Only log to console, don't show error to user
+            console.warn('Backend not available - running in frontend-only mode:', err.message);
         }
     };
 

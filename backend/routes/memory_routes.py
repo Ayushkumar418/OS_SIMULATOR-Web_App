@@ -12,12 +12,14 @@ from memory.page_replacement import (
     simulate_page_replacement
 )
 from memory.contiguous import ContiguousMemoryManager, AllocationAlgorithm
+from memory.segmentation import SegmentationManager
 
 router = APIRouter()
 
 # Global managers (in production, use proper state management)
 paging_managers = {}
 contiguous_manager = None  # Will be initialized on first use
+segmentation_manager = None  # Will be initialized on first use
 
 
 class CreatePageTableRequest(BaseModel):
@@ -305,3 +307,231 @@ async def reset_memory():
     """Reset memory manager."""
     paging_managers.clear()
     return {"success": True, "message": "Memory manager reset"}
+
+
+# ============================================================================
+# SEGMENTATION API ENDPOINTS
+# ============================================================================
+
+class CreateSegmentTableRequest(BaseModel):
+    """Request model for creating a segment table."""
+    pid: int
+    segments: List[dict]  # [{name, size, protection}]
+    total_memory: Optional[int] = 1024
+
+
+class AllocateSegmentRequest(BaseModel):
+    """Request model for allocating a segment."""
+    pid: int
+    segment_num: int
+
+
+class DeallocateSegmentRequest(BaseModel):
+    """Request model for deallocating a segment."""
+    pid: int
+    segment_num: int
+
+
+class TranslateSegmentAddressRequest(BaseModel):
+    """Request model for address translation."""
+    pid: int
+    segment_num: int
+    offset: int
+
+
+class CheckProtectionRequest(BaseModel):
+    """Request model for protection checking."""
+    pid: int
+    segment_num: int
+    access_type: str  # "read", "write", "execute"
+
+
+@router.post("/segmentation/create-table")
+async def create_segment_table(request: CreateSegmentTableRequest):
+    """
+    Create a segment table for a process.
+    
+    Each segment should have: name, size, and optional protection bits.
+    """
+    global segmentation_manager
+    
+    try:
+        # Initialize or reinitialize manager if memory size changed
+        if segmentation_manager is None or segmentation_manager.total_memory != request.total_memory:
+            segmentation_manager = SegmentationManager(total_memory=request.total_memory)
+        
+        success, result = segmentation_manager.create_segment_table(
+            pid=request.pid,
+            segments_info=request.segments
+        )
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("error", "Failed to create segment table"))
+        
+        return {
+            "success": True,
+            **result,
+            "memory_state": segmentation_manager.get_memory_state()
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/segmentation/allocate")
+async def allocate_segment(request: AllocateSegmentRequest):
+    """
+    Allocate physical memory for a segment using First Fit algorithm.
+    """
+    global segmentation_manager
+    
+    try:
+        if segmentation_manager is None:
+            raise HTTPException(status_code=400, detail="No segmentation manager initialized")
+        
+        success, result = segmentation_manager.allocate_segment(
+            pid=request.pid,
+            segment_num=request.segment_num
+        )
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("error", "Allocation failed"))
+        
+        return {"success": True, **result}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/segmentation/deallocate")
+async def deallocate_segment(request: DeallocateSegmentRequest):
+    """
+    Deallocate memory for a specific segment.
+    """
+    global segmentation_manager
+    
+    try:
+        if segmentation_manager is None:
+            raise HTTPException(status_code=400, detail="No segmentation manager initialized")
+        
+        success, result = segmentation_manager.deallocate_segment(
+            pid=request.pid,
+            segment_num=request.segment_num
+        )
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("error", "Deallocation failed"))
+        
+        return {"success": True, **result}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/segmentation/deallocate-process")
+async def deallocate_process_segments(request: DeallocateSegmentRequest):
+    """
+    Deallocate all segments for a process and remove its segment table.
+    """
+    global segmentation_manager
+    
+    try:
+        if segmentation_manager is None:
+            raise HTTPException(status_code=400, detail="No segmentation manager initialized")
+        
+        success, result = segmentation_manager.deallocate_process(pid=request.pid)
+        
+        if not success:
+            raise HTTPException(status_code=400, detail=result.get("error", "Process deallocation failed"))
+        
+        return {"success": True, **result}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/segmentation/translate")
+async def translate_segment_address(request: TranslateSegmentAddressRequest):
+    """
+    Translate logical address (segment:offset) to physical address.
+    
+    Performs bounds checking and returns detailed translation info.
+    """
+    global segmentation_manager
+    
+    try:
+        if segmentation_manager is None:
+            raise HTTPException(status_code=400, detail="No segmentation manager initialized")
+        
+        success, result = segmentation_manager.translate_address(
+            pid=request.pid,
+            segment_num=request.segment_num,
+            offset=request.offset
+        )
+        
+        if not success:
+            # Return error with fault info but don't raise exception
+            return {"success": False, **result}
+        
+        return {"success": True, **result}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/segmentation/check-protection")
+async def check_segment_protection(request: CheckProtectionRequest):
+    """
+    Check if a memory access type is allowed by segment protection bits.
+    """
+    global segmentation_manager
+    
+    try:
+        if segmentation_manager is None:
+            raise HTTPException(status_code=400, detail="No segmentation manager initialized")
+        
+        allowed, result = segmentation_manager.check_protection(
+            pid=request.pid,
+            segment_num=request.segment_num,
+            access_type=request.access_type
+        )
+        
+        return {"success": True, **result}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/segmentation/state")
+async def get_segmentation_state():
+    """
+    Get current segmentation memory state for visualization.
+    """
+    global segmentation_manager
+    
+    if segmentation_manager is None:
+        return {
+            "initialized": False,
+            "message": "No segmentation manager initialized"
+        }
+    
+    return {
+        "initialized": True,
+        **segmentation_manager.get_memory_state()
+    }
+
+
+@router.post("/segmentation/reset")
+async def reset_segmentation():
+    """
+    Reset segmentation manager to initial state.
+    """
+    global segmentation_manager
+    
+    if segmentation_manager is None:
+        segmentation_manager = SegmentationManager(total_memory=1024)
+    
+    result = segmentation_manager.reset()
+    return result

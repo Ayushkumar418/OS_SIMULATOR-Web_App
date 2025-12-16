@@ -32,7 +32,7 @@ function MemoryManagement() {
             icon: '🧩',
             description: 'Explore segmented memory organization with segment tables, dynamic segment allocation, and protection mechanisms.',
             features: ['Segment Tables', 'Dynamic Allocation', 'Protection Bits', 'Segment Addressing'],
-            status: 'coming-soon',
+            status: 'implemented',
             path: '/memory/segmentation',
             color: '#ec4899'
         },
