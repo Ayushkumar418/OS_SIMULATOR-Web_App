@@ -317,6 +317,52 @@ const PagingSimulator = () => {
             .filter(num => !isNaN(num) && num >= 0);
     };
 
+    // Export configuration to JSON
+    const exportConfig = () => {
+        const exportData = {
+            config,
+            referenceString,
+            statistics,
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `paging-simulator-state-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // Import configuration from JSON
+    const importConfig = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+
+                if (data.config) {
+                    setConfig(data.config);
+                }
+                if (data.referenceString) {
+                    setReferenceString(data.referenceString);
+                }
+
+                setError(null);
+            } catch (err) {
+                setError('Invalid configuration file');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    };
+
     // Run page replacement simulation
     const runSimulation = () => {
         // Validate reference string
@@ -867,6 +913,28 @@ const PagingSimulator = () => {
                         >
                             🔄 Compare All Algorithms
                         </button>
+
+                        {/* Import/Export Section */}
+                        <div className="import-export-section">
+                            <h4>💾 Save / Load</h4>
+                            <div className="import-export-buttons">
+                                <button
+                                    className="matrix-button btn-export"
+                                    onClick={exportConfig}
+                                >
+                                    📤 Export
+                                </button>
+                                <label className="matrix-button btn-import">
+                                    📥 Import
+                                    <input
+                                        type="file"
+                                        accept=".json"
+                                        onChange={importConfig}
+                                        style={{ display: 'none' }}
+                                    />
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </aside>
 

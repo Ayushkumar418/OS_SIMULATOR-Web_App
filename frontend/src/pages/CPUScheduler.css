@@ -623,8 +623,9 @@
     margin-bottom: 1rem;
 }
 
-.import-export-buttons {
+.cpu-import-export-buttons {
     display: grid;
+    grid-template-columns: auto;
     gap: 0.75rem;
 }
 

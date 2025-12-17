@@ -1622,3 +1622,50 @@
         font-size: 0.8rem;
     }
 }
+
+/* Import/Export Section */
+.paging-simulator .import-export-section {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 255, 65, 0.1);
+}
+
+.paging-simulator .import-export-section h4 {
+    color: var(--matrix-secondary);
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.paging-simulator .import-export-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.paging-simulator .btn-export {
+    background: rgba(0, 255, 65, 0.1) !important;
+    border: 1px solid rgba(0, 255, 65, 0.3) !important;
+    color: var(--matrix-primary) !important;
+}
+
+.paging-simulator .btn-export:hover {
+    background: rgba(0, 255, 65, 0.2) !important;
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
+}
+
+.paging-simulator .btn-import {
+    background: rgba(0, 212, 255, 0.1) !important;
+    border: 1px solid rgba(0, 212, 255, 0.3) !important;
+    color: var(--matrix-secondary) !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paging-simulator .btn-import:hover {
+    background: rgba(0, 212, 255, 0.2) !important;
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+}

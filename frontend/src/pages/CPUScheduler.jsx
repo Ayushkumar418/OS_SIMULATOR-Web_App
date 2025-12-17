@@ -167,11 +167,32 @@ const CPUScheduler = () => {
             const response = await scenarioAPI.load(scenarioId);
             const data = response.data;
 
-            setProcesses(data.processes || []);
-            setAlgorithm(data.algorithm || 'fcfs');
-            setTimeQuantum(data.time_quantum || 4);
-            setSimulation(null);
+            const loadedProcesses = data.processes || [];
+            const loadedAlgorithm = data.algorithm || 'fcfs';
+            const loadedQuantum = data.time_quantum || 4;
+
+            setProcesses(loadedProcesses);
+            setAlgorithm(loadedAlgorithm);
+            setTimeQuantum(loadedQuantum);
             setError(null);
+
+            // Auto-run simulation with loaded data
+            if (loadedProcesses.length > 0) {
+                setLoading(true);
+                try {
+                    const simResponse = await schedulerAPI.runSimulation(
+                        loadedAlgorithm,
+                        loadedProcesses,
+                        loadedQuantum,
+                        preemptive
+                    );
+                    setSimulation(simResponse.data);
+                } catch (simErr) {
+                    setError(simErr.response?.data?.detail || 'Simulation failed');
+                } finally {
+                    setLoading(false);
+                }
+            }
         } catch (err) {
             setError('Failed to load scenario');
         }
@@ -669,7 +690,7 @@ const CPUScheduler = () => {
                         {/* Import/Export Card */}
                         <div className="card import-export-card">
                             <h3>💾 Save / Load</h3>
-                            <div className="import-export-buttons">
+                            <div className="cpu-import-export-buttons">
                                 <button
                                     className="btn btn-export"
                                     onClick={exportConfig}
