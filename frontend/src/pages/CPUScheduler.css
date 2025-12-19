@@ -1279,7 +1279,7 @@
     min-width: 32px;
     padding: 0.25rem 0.5rem;
     background: linear-gradient(135deg, var(--cs-primary), #00cc6a);
-    color: #0a0e14;
+    color: #ffffff;
     border-radius: 6px;
     font-family: 'Courier New', monospace;
     font-size: 0.85rem;
@@ -1396,5 +1396,169 @@
 
     .help-content {
         padding: 1rem;
+    }
+}
+
+/* ===================== */
+/* Keyboard Shortcuts    */
+/* ===================== */
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--cs-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.shortcut-item:hover {
+    border-color: var(--cs-primary);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.shortcut-item kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    padding: 0.35rem 0.6rem;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 255, 0.15));
+    border: 1px solid var(--cs-primary);
+    border-radius: 6px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--cs-primary);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(0, 255, 136, 0.2);
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+}
+
+.shortcut-item span {
+    font-size: 0.9rem;
+    color: var(--cs-text-dim);
+}
+
+/* Help Section Styling */
+.help-section {
+    margin-bottom: 1.5rem;
+}
+
+.help-section h3 {
+    color: var(--cs-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--cs-border);
+}
+
+.help-section ul,
+.help-section ol {
+    padding-left: 1.25rem;
+}
+
+.help-section li {
+    margin-bottom: 0.5rem;
+    color: var(--cs-text-dim);
+    line-height: 1.5;
+}
+
+.help-section li strong {
+    color: var(--cs-text);
+}
+
+/* Algorithm Cards in Help */
+.algo-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.algo-card {
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--cs-border);
+    border-radius: 8px;
+}
+
+.algo-card strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--cs-accent);
+}
+
+.algo-card p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--cs-text-dim);
+}
+
+/* ===================== */
+/* Improved Help Button  */
+/* ===================== */
+
+.help-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 6rem;
+    height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--cs-bg-elevated), rgba(0, 212, 255, 0.1));
+    border: 2px solid var(--cs-secondary);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.help-btn:hover {
+    transform: scale(1.1);
+    border-color: var(--cs-primary);
+    background: linear-gradient(135deg, var(--cs-bg-elevated), rgba(0, 255, 136, 0.15));
+    box-shadow:
+        0 6px 25px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 255, 136, 0.4),
+        0 0 40px rgba(0, 212, 255, 0.2);
+}
+
+.help-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive shortcuts grid */
+@media (max-width: 768px) {
+    .shortcuts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .algo-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .help-btn {
+        bottom: 1rem;
+        right: 1rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
     }
 }

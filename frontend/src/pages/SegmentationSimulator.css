@@ -127,8 +127,8 @@
 
 .segmentation-header .help-button {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -3.8rem;
+    right: -5rem;
     background: rgba(0, 212, 255, 0.15);
     border: 1px solid var(--seg-secondary);
     color: var(--seg-secondary);
