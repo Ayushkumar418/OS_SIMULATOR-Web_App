@@ -39,10 +39,10 @@ function MemoryManagement() {
         {
             id: 'virtual-memory',
             title: 'Virtual Memory',
-            icon: '🔄',
-            description: 'Understand virtual memory concepts with demand paging, page replacement strategies, and working set visualization.',
-            features: ['Demand Paging', 'Thrashing Analysis', 'Working Set Model', 'Page Fault Handling'],
-            status: 'coming-soon',
+            icon: '🌐',
+            description: 'Understand virtual memory concepts with TLB simulation, demand paging, thrashing detection, and working set visualization.',
+            features: ['TLB Cache', 'Thrashing Detection', 'Working Set Model', '6 Replacement Algorithms'],
+            status: 'implemented',
             path: '/memory/virtual',
             color: '#10b981'
         }

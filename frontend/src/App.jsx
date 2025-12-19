@@ -5,6 +5,7 @@ import MemoryManagement from './pages/MemoryManagement';
 import ContiguousAllocator from './pages/ContiguousAllocator';
 import PagingSimulator from './pages/PagingSimulator';
 import SegmentationSimulator from './pages/SegmentationSimulator';
+import VirtualMemory from './pages/VirtualMemory';
 import FileSystem from './pages/FileSystem';
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/memory/contiguous" element={<ContiguousAllocator />} />
                     <Route path="/memory/paging" element={<PagingSimulator />} />
                     <Route path="/memory/segmentation" element={<SegmentationSimulator />} />
+                    <Route path="/memory/virtual" element={<VirtualMemory />} />
                     <Route path="/filesystem" element={<FileSystem />} />
                 </Routes>
             </div>
