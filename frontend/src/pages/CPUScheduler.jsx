@@ -849,41 +849,75 @@ const CPUScheduler = () => {
                                     <div className="algorithm-grid">
                                         <div className="algo-card">
                                             <strong>FCFS</strong>
-                                            <p>First Come First Serve - executes in arrival order</p>
+                                            <p>First Come First Serve - executes in arrival order. Simple but can cause convoy effect.</p>
                                         </div>
                                         <div className="algo-card">
-                                            <strong>SJF</strong>
-                                            <p>Shortest Job First - shortest burst time runs first</p>
+                                            <strong>SJF / SRTF</strong>
+                                            <p>Shortest Job First - optimal average waiting time. Enable preemptive for Shortest Remaining Time First.</p>
                                         </div>
                                         <div className="algo-card">
                                             <strong>Priority</strong>
-                                            <p>Higher priority processes execute first</p>
+                                            <p>Higher priority (lower number) runs first. Can cause starvation of low-priority processes.</p>
                                         </div>
                                         <div className="algo-card">
                                             <strong>Round Robin</strong>
-                                            <p>Each process gets a time quantum in turns</p>
+                                            <p>Time-sliced execution with configurable quantum. Fair for interactive systems.</p>
                                         </div>
                                     </div>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>⚙️ Preemptive vs Non-Preemptive</h3>
+                                    <ul>
+                                        <li><strong>Non-Preemptive:</strong> Once a process starts, it runs until completion</li>
+                                        <li><strong>Preemptive:</strong> Running process can be interrupted if higher priority/shorter job arrives</li>
+                                        <li>SJF with preemptive = SRTF (Shortest Remaining Time First)</li>
+                                    </ul>
                                 </section>
 
                                 <section className="help-section">
                                     <h3>🔧 How to Use</h3>
                                     <ol>
                                         <li>Select an <strong>Algorithm</strong> from the dropdown</li>
-                                        <li>Add processes with <strong>Arrival Time</strong> and <strong>Burst Time</strong></li>
-                                        <li>Click <strong>Run Simulation</strong> to see the Gantt chart</li>
-                                        <li>Enable <strong>Comparison Mode</strong> to compare all algorithms</li>
+                                        <li>Add processes with <strong>Arrival Time</strong>, <strong>Burst Time</strong>, and optionally <strong>Priority</strong></li>
+                                        <li>Click <strong>Run Simulation</strong> to see the Gantt chart and metrics</li>
+                                        <li>Toggle <strong>Comparison Mode</strong> to run all algorithms at once</li>
+                                        <li>Use <strong>Export/Import</strong> to save and load configurations</li>
                                         <li>Try <strong>Demo Scenarios</strong> for pre-built examples</li>
                                     </ol>
                                 </section>
 
                                 <section className="help-section">
+                                    <h3>📊 Comparison Mode</h3>
+                                    <p>Enable comparison mode to run all algorithms simultaneously and see side-by-side results with an AI-powered recommendation for your specific workload.</p>
+                                </section>
+
+                                <section className="help-section">
                                     <h3>📈 Performance Metrics</h3>
                                     <ul>
-                                        <li><strong>Waiting Time</strong> - Time spent in ready queue</li>
-                                        <li><strong>Turnaround Time</strong> - Total time from arrival to completion</li>
-                                        <li><strong>Response Time</strong> - Time until first CPU allocation</li>
-                                        <li><strong>Throughput</strong> - Processes completed per time unit</li>
+                                        <li><strong>Waiting Time:</strong> Time spent in ready queue (lower is better)</li>
+                                        <li><strong>Turnaround Time:</strong> Total time from arrival to completion</li>
+                                        <li><strong>Response Time:</strong> Time until first CPU allocation (important for interactive)</li>
+                                        <li><strong>Throughput:</strong> Processes completed per time unit</li>
+                                        <li><strong>CPU Utilization:</strong> Percentage of time CPU is busy</li>
+                                    </ul>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>💾 Save / Load</h3>
+                                    <ul>
+                                        <li><strong>Export Config:</strong> Download current processes and settings as JSON</li>
+                                        <li><strong>Import Config:</strong> Load a previously saved configuration file</li>
+                                        <li><strong>Demo Scenarios:</strong> Pre-built examples loaded from the backend</li>
+                                    </ul>
+                                </section>
+
+                                <section className="help-section">
+                                    <h3>⏱️ Time Quantum (Round Robin)</h3>
+                                    <ul>
+                                        <li><strong>Too Small:</strong> High context switch overhead</li>
+                                        <li><strong>Too Large:</strong> Degrades to FCFS behavior</li>
+                                        <li><strong>Optimal:</strong> 80% of processes should complete within one quantum</li>
                                     </ul>
                                 </section>
 

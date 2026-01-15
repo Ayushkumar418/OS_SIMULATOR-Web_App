@@ -1617,47 +1617,79 @@ const SegmentationSimulator = () => {
 
                             <div className="help-content">
                                 <section>
-                                    <h3>What is Segmentation?</h3>
+                                    <h3>🎯 What is Segmentation?</h3>
                                     <p>
-                                        Segmentation divides a program into logical segments (Code, Data, Stack, etc.)
-                                        of varying sizes. Each segment has its own base address and limit.
+                                        Segmentation divides a program into logical segments (Code, Data, Stack, Heap, etc.)
+                                        of varying sizes. Unlike paging, segments reflect the program's logical structure.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h3>Segment Table</h3>
-                                    <p>
-                                        Each process has a segment table mapping logical segments to physical addresses:
-                                    </p>
+                                    <h3>🔧 How to Use</h3>
+                                    <ol>
+                                        <li>Configure <strong>Memory Size</strong> and <strong>Allocation Algorithm</strong></li>
+                                        <li>Go to <strong>Create</strong> tab - add segments with name, size, and protection</li>
+                                        <li>Click <strong>Create Process</strong> to allocate memory</li>
+                                        <li>Use <strong>Translate</strong> tab to convert logical to physical addresses</li>
+                                        <li>Use <strong>Protect</strong> tab to test access permissions</li>
+                                        <li>Use <strong>Compare</strong> tab to compare allocation algorithms</li>
+                                    </ol>
+                                </section>
+
+                                <section>
+                                    <h3>📊 Allocation Algorithms</h3>
                                     <ul>
-                                        <li><strong>Base:</strong> Starting physical address</li>
-                                        <li><strong>Limit:</strong> Size of the segment</li>
+                                        <li><strong>First Fit:</strong> Allocates the first hole large enough. Fast but fragments memory at start.</li>
+                                        <li><strong>Best Fit:</strong> Allocates the smallest hole that fits. Minimizes leftover space.</li>
+                                        <li><strong>Worst Fit:</strong> Allocates the largest hole. Leaves bigger remaining holes.</li>
+                                        <li><strong>Next Fit:</strong> Like First Fit but continues from last allocation point.</li>
+                                    </ul>
+                                </section>
+
+                                <section>
+                                    <h3>📋 Segment Table</h3>
+                                    <p>Each process has a segment table mapping logical segments to physical addresses:</p>
+                                    <ul>
+                                        <li><strong>Base:</strong> Starting physical address of segment</li>
+                                        <li><strong>Limit:</strong> Size of the segment in bytes</li>
                                         <li><strong>Protection:</strong> R(ead)/W(rite)/X(ecute) permissions</li>
                                     </ul>
                                 </section>
 
                                 <section>
-                                    <h3>Address Translation</h3>
-                                    <p>Logical address = (Segment Number, Offset)</p>
-                                    <p>Physical address = Base[Segment] + Offset</p>
-                                    <p>Condition: Offset &lt; Limit (bounds check)</p>
+                                    <h3>🔢 Address Translation</h3>
+                                    <ul>
+                                        <li>Logical address = (Segment Number, Offset)</li>
+                                        <li>Physical address = Base[Segment] + Offset</li>
+                                        <li>Condition: Offset &lt; Limit (bounds check prevents buffer overflow)</li>
+                                    </ul>
                                 </section>
 
                                 <section>
-                                    <h3>External Fragmentation</h3>
+                                    <h3>🛡️ Protection Bits</h3>
+                                    <ul>
+                                        <li><strong className="prot-r">R</strong> - Read access allowed (e.g., constants)</li>
+                                        <li><strong className="prot-w">W</strong> - Write access allowed (e.g., heap/stack)</li>
+                                        <li><strong className="prot-x">X</strong> - Execute access allowed (e.g., code)</li>
+                                    </ul>
+                                </section>
+
+                                <section>
+                                    <h3>🔗 Segment Sharing</h3>
+                                    <p>Segments can be shared between processes (e.g., shared libraries). Click the 🔗 button on an allocated segment to share it with another process.</p>
+                                </section>
+
+                                <section>
+                                    <h3>🧩 External Fragmentation</h3>
                                     <p>
                                         Variable-sized segments cause external fragmentation - free memory
-                                        becomes scattered into small, unusable holes.
+                                        becomes scattered into small, unusable holes. Use <strong>Compact</strong> to consolidate.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h3>Protection Bits</h3>
-                                    <ul>
-                                        <li><strong className="prot-r">R</strong> - Read access allowed</li>
-                                        <li><strong className="prot-w">W</strong> - Write access allowed</li>
-                                        <li><strong className="prot-x">X</strong> - Execute access allowed</li>
-                                    </ul>
+                                    <h3>💾 Import / Export</h3>
+                                    <p>Save your memory state with <strong>Export</strong> and restore later with <strong>Import</strong>.</p>
                                 </section>
                             </div>
                         </motion.div>

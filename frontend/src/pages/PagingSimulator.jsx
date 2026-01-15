@@ -1186,52 +1186,83 @@ const PagingSimulator = () => {
                 <div className="modal-overlay" onClick={() => setShowHelp(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>�� Paging Simulator Help</h2>
+                            <h2>📚 Paging Simulator Help</h2>
                             <button className="modal-close" onClick={() => setShowHelp(false)}>✕</button>
                         </div>
                         <div className="modal-body">
                             <section>
-                                <h3>🎯 How to Use</h3>
+                                <h3>🎯 What is Paging?</h3>
+                                <p>Paging divides physical memory into fixed-size frames and logical memory into pages of the same size. Pages are loaded into available frames, eliminating external fragmentation.</p>
+                            </section>
+
+                            <section>
+                                <h3>🔧 How to Use</h3>
                                 <ol>
-                                    <li>Select an <strong>algorithm</strong> (FIFO, LRU, or Optimal)</li>
-                                    <li>Configure <strong>frames</strong> and <strong>page size</strong></li>
-                                    <li>Enter a <strong>reference string</strong> or load a preset</li>
-                                    <li>Click <strong>SIMULATE</strong> to run</li>
+                                    <li>Set <strong>Page Size</strong> and <strong>Physical Frames</strong></li>
+                                    <li>Select a <strong>Replacement Algorithm</strong></li>
+                                    <li>Enter a <strong>Reference String</strong> (page numbers separated by spaces)</li>
+                                    <li>Click <strong>Simulate</strong> to run</li>
                                     <li>Use playback controls to step through the simulation</li>
+                                    <li>Try <strong>Address Translation</strong> to convert virtual to physical</li>
                                 </ol>
                             </section>
 
                             <section>
-                                <h3>📚 Algorithms</h3>
+                                <h3>📊 Replacement Algorithms</h3>
                                 <div className="algo-desc">
                                     <strong>FIFO (First-In-First-Out)</strong>
-                                    <p>Replaces the oldest page in memory. Simple but can suffer from Belady's anomaly.</p>
+                                    <p>Replaces the oldest page in memory. Simple but can suffer from Belady's anomaly (more frames = more faults in some cases).</p>
                                 </div>
                                 <div className="algo-desc">
                                     <strong>LRU (Least Recently Used)</strong>
-                                    <p>Replaces the page that hasn't been used for the longest time. Better performance than FIFO.</p>
+                                    <p>Replaces the page that hasn't been used for the longest time. Generally performs well, exploits temporal locality.</p>
                                 </div>
                                 <div className="algo-desc">
                                     <strong>Optimal (Belady's Algorithm)</strong>
-                                    <p>Replaces the page that won't be used for the longest time in the future. Theoretical best (requires future knowledge).</p>
+                                    <p>Replaces the page that won't be used for the longest time in the future. Theoretical best (requires future knowledge, used as benchmark).</p>
                                 </div>
                             </section>
 
                             <section>
-                                <h3>🔧 Features</h3>
+                                <h3>📝 Preset Scenarios</h3>
                                 <ul>
-                                    <li><strong>Auto-play:</strong> Automatic step-through with adjustable speed</li>
-                                    <li><strong>Algorithm Comparison:</strong> Run all algorithms and see which performs best</li>
-                                    <li><strong>Address Translation:</strong> Convert virtual addresses to physical</li>
-                                    <li><strong>Export:</strong> Download results as JSON or CSV</li>
+                                    <li><strong>FIFO Anomaly:</strong> Demonstrates Belady's anomaly - try with 3 vs 4 frames</li>
+                                    <li><strong>Locality of Reference:</strong> Shows how temporal locality improves hit ratio</li>
+                                    <li><strong>High Miss Rate:</strong> Sequential access with no page reuse</li>
                                 </ul>
                             </section>
 
                             <section>
-                                <h3>📊 Understanding Results</h3>
-                                <p><strong>Page Fault:</strong> Page not in memory (red pulse)</p>
-                                <p><strong>Page Hit:</strong> Page found in memory (green pulse)</p>
-                                <p><strong>Hit Ratio:</strong> Percentage of hits (higher = better)</p>
+                                <h3>🔢 Address Translation</h3>
+                                <ul>
+                                    <li><strong>Virtual Address:</strong> Page × Page Size + Offset</li>
+                                    <li><strong>Physical Address:</strong> Frame × Page Size + Offset</li>
+                                    <li>Supports Decimal, Hex, and Binary input formats</li>
+                                </ul>
+                            </section>
+
+                            <section>
+                                <h3>📈 Understanding Results</h3>
+                                <ul>
+                                    <li><strong>Page Fault (red):</strong> Page not in memory, must load from disk</li>
+                                    <li><strong>Page Hit (green):</strong> Page already in memory, fast access</li>
+                                    <li><strong>Hit Ratio:</strong> Percentage of hits (higher is better)</li>
+                                    <li><strong>Victim:</strong> The page that was replaced</li>
+                                </ul>
+                            </section>
+
+                            <section>
+                                <h3>💾 Import / Export</h3>
+                                <ul>
+                                    <li><strong>Export JSON:</strong> Save configuration and results</li>
+                                    <li><strong>Export CSV:</strong> Export comparison results as spreadsheet</li>
+                                    <li><strong>Import:</strong> Load a previously saved configuration</li>
+                                </ul>
+                            </section>
+
+                            <section>
+                                <h3>🔄 Comparison Mode</h3>
+                                <p>Click <strong>Compare All Algorithms</strong> to run FIFO, LRU, and Optimal simultaneously and see which performs best for your workload.</p>
                             </section>
                         </div>
                     </div>

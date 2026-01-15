@@ -1751,30 +1751,60 @@ const VirtualMemory = () => {
                             <div className="vm-modal-body">
                                 <section>
                                     <h3>📖 What is Virtual Memory?</h3>
-                                    <p>Virtual memory is a memory management technique that provides an "idealized abstraction of the storage resources" available on a machine, creating the illusion of a very large main memory.</p>
+                                    <p>Virtual memory creates an illusion of a large, contiguous memory space by using disk as extension of RAM. Processes can use more memory than physically available.</p>
                                 </section>
 
                                 <section>
-                                    <h3>🔧 Features</h3>
+                                    <h3>🔧 How to Use</h3>
+                                    <ol>
+                                        <li>Configure <strong>Physical Frames</strong> and <strong>TLB Size</strong></li>
+                                        <li>Select a <strong>Page Replacement Algorithm</strong></li>
+                                        <li>Choose or create a <strong>Process</strong></li>
+                                        <li>Enter <strong>Page Reference String</strong> or use presets</li>
+                                        <li>Click <strong>Simulate</strong> and watch the animation</li>
+                                        <li>Use playback controls to step through each access</li>
+                                    </ol>
+                                </section>
+
+                                <section>
+                                    <h3>📊 Page Replacement Algorithms (6 Total)</h3>
                                     <ul>
-                                        <li><strong>TLB Simulation:</strong> Translation Lookaside Buffer caches recent address translations</li>
-                                        <li><strong>Demand Paging:</strong> Pages loaded only when accessed (page fault)</li>
-                                        <li><strong>6 Algorithms:</strong> FIFO, LRU, Optimal, Clock, LFU, MFU</li>
-                                        <li><strong>Thrashing Detection:</strong> Monitors CPU utilization for high fault rates</li>
-                                        <li><strong>Working Set:</strong> Tracks active pages within a time window</li>
+                                        <li><strong>FIFO:</strong> Replace the oldest page. Simple but has Belady's anomaly.</li>
+                                        <li><strong>LRU:</strong> Replace least recently used. Good locality exploitation.</li>
+                                        <li><strong>Optimal:</strong> Replace page used furthest in future. Theoretical best.</li>
+                                        <li><strong>Clock (Second Chance):</strong> FIFO with reference bit check.</li>
+                                        <li><strong>LFU:</strong> Replace least frequently used page.</li>
+                                        <li><strong>MFU:</strong> Replace most frequently used page.</li>
                                     </ul>
                                 </section>
 
                                 <section>
-                                    <h3>🎯 How to Use</h3>
-                                    <ol>
-                                        <li>Configure physical frames and TLB size</li>
-                                        <li>Select a page replacement algorithm</li>
-                                        <li>Choose a process or create new ones</li>
-                                        <li>Enter page reference string</li>
-                                        <li>Click Simulate and watch the animation</li>
-                                        <li>Use playback controls to step through</li>
-                                    </ol>
+                                    <h3>💾 TLB (Translation Lookaside Buffer)</h3>
+                                    <ul>
+                                        <li><strong>TLB Hit:</strong> Page-to-frame mapping found in cache (fast)</li>
+                                        <li><strong>TLB Miss:</strong> Must consult page table (slower)</li>
+                                        <li>TLB caches recent translations to speed up address conversion</li>
+                                    </ul>
+                                </section>
+
+                                <section>
+                                    <h3>📈 Key Metrics</h3>
+                                    <ul>
+                                        <li><strong>Page Faults:</strong> Page not in memory (expensive disk I/O)</li>
+                                        <li><strong>Page Hits:</strong> Page already in memory (fast)</li>
+                                        <li><strong>Hit Ratio:</strong> Percentage of accesses satisfied from memory</li>
+                                        <li><strong>Dirty Pages:</strong> Modified pages that need write-back</li>
+                                    </ul>
+                                </section>
+
+                                <section>
+                                    <h3>⚠️ Thrashing Detection</h3>
+                                    <p>When too many processes compete for limited frames, the system spends more time paging than executing. CPU utilization drops dramatically.</p>
+                                </section>
+
+                                <section>
+                                    <h3>🔄 Working Set</h3>
+                                    <p>The set of pages actively used by a process within a time window. Keeping the working set in memory minimizes page faults.</p>
                                 </section>
 
                                 <section>
@@ -1783,7 +1813,7 @@ const VirtualMemory = () => {
                                         <div><kbd>Space</kbd> Play/Pause</div>
                                         <div><kbd>←</kbd> Previous Step</div>
                                         <div><kbd>→</kbd> Next Step</div>
-                                        <div><kbd>R</kbd> Reset</div>
+                                        <div><kbd>R</kbd> Reset Simulation</div>
                                         <div><kbd>H</kbd> Toggle Help</div>
                                         <div><kbd>Esc</kbd> Close Help</div>
                                     </div>

@@ -104,7 +104,7 @@ const Dashboard = () => {
             </main>
 
             <footer className="dashboard-footer">
-                <p>&copy; 2024 OS Simulator - Educational Project</p>
+                <p>&copy; 2025 OS Simulator - Educational Project</p>
             </footer>
         </div>
     );

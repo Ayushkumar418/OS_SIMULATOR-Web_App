@@ -23,38 +23,39 @@ This OS Simulator is designed for students and educators to understand how opera
   - Paging simulation with page tables
   - Virtual to physical address translation
   - Page fault handling
-  - Page replacement algorithms (FIFO, LRU, Optimal)
+  - Page replacement algorithms (FIFO, LRU, Optimal, Clock)
+  - Segmentation with protection
+  - Contiguous memory allocation
   
 - **File System**
   - Block-based file operations
-  - Create, read, write, delete operations
-  - Block allocation visualization
-  - Directory and file management
+  - Multiple allocation methods (Contiguous, Linked, Indexed)
+  - Defragmentation tool
+  - Access control and permissions
 
 - **Educational Features**
   - Step-by-step explanations
   - Real-time Gantt charts
   - Performance metrics
-  - Process state transitions
-  - Demo scenarios for teaching
+  - Algorithm comparison mode
+  - Demo scenarios
 
-## 🏗️ Architecture
+## 📖 Documentation
 
-```
-OS_SIMULATOR(Web_App)/
-├── backend/          # Python FastAPI backend
-│   ├── schedulers/   # CPU scheduling algorithms
-│   ├── memory/       # Memory management & paging
-│   ├── filesystem/   # File system simulation
-│   ├── routes/       # REST API endpoints
-│   └── scenarios/    # Demo scenarios
-└── frontend/         # React.js frontend
-    ├── src/
-    │   ├── pages/       # Main application pages
-    │   ├── components/  # Reusable UI components
-    │   └── services/    # API integration
-    └── public/
-```
+Comprehensive documentation is available in the [`docs/`](docs/) folder:
+
+| Section | Description |
+|---------|-------------|
+| [📚 Modules](docs/modules/) | Detailed documentation for each simulator |
+| [🏗️ Architecture](docs/architecture/) | System design, API reference, components |
+| [📖 Guides](docs/guides/) | Installation, user guide, contributing |
+
+### Quick Links
+
+- [Installation Guide](docs/guides/INSTALLATION.md)
+- [User Guide](docs/guides/USER_GUIDE.md)
+- [API Reference](docs/architecture/API_REFERENCE.md)
+- [Architecture Overview](docs/architecture/ARCHITECTURE.md)
 
 ## 🚀 Getting Started
 
@@ -64,147 +65,38 @@ OS_SIMULATOR(Web_App)/
 - Node.js 16 or higher
 - npm or yarn
 
-### Backend Setup
-
-1. Navigate to the backend directory:
+### Quick Start
 
 ```bash
+# Clone the repository
+git clone https://github.com/Ayushkumar418/OS_SIMULATOR-Web_App.git
+cd OS_SIMULATOR-Web_App
+
+# Start backend
 cd backend
-```
-
-2. Install Python dependencies:
-
-```bash
 pip install -r requirements.txt
-```
-
-3. Start the FastAPI server:
-
-```bash
 python main.py
-```
 
-The backend API will be available at `http://localhost:8000`
-
-- API Documentation: `http://localhost:8000/docs`
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-
-```bash
+# Start frontend (new terminal)
 cd frontend
-```
-
-2. Install dependencies:
-
-```bash
 npm install
-```
-
-3. Start the development server:
-
-```bash
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:5173`
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:8000`
+- API Docs: `http://localhost:8000/docs`
 
-## 📖 Usage
+## 📊 Modules
 
-### Running CPU Scheduler Simulation
-
-1. Navigate to the CPU Scheduler page
-2. Select a scheduling algorithm (FCFS, SJF, Priority, or Round Robin)
-3. Add processes with arrival time, burst time, and priority
-4. Or load a pre-built demo scenario
-5. Click "Run Simulation" to see:
-   - Gantt chart visualization
-   - Performance metrics
-   - Step-by-step explanations
-   - Process details table
-
-### Testing Memory Management
-
-API endpoints available at `/api/memory/*`:
-
-- Create page tables
-- Allocate pages
-- Simulate page faults
-- Test page replacement algorithms
-
-### Testing File System
-
-API endpoints available at `/api/filesystem/*`:
-
-- Create files and directories
-- Read/write operations
-- Block visualization
-- File deletion
-
-## 🎓 Educational Use Cases
-
-- **Operating Systems Courses**: Demonstrate scheduling algorithms and their trade-offs
-- **Lab Sessions**: Interactive exercises with custom scenarios
-- **Self-Study**: Learn OS concepts through visualization
-- **Exam Preparation**: Compare algorithm performance metrics
-
-## 📊 Demo Scenarios
-
-Pre-built scenarios available in `backend/scenarios/`:
-
-- `fcfs_basic.json` - Simple FCFS demonstration
-- `round_robin_demo.json` - Round Robin with time quantum effects
-
-## 🔧 API Documentation
-
-### Scheduler Endpoints
-
-- `POST /api/scheduler/run` - Run simulation
-- `POST /api/scheduler/compare` - Compare algorithms
-- `GET /api/scheduler/algorithms` - List available algorithms
-
-### Memory Endpoints
-
-- `POST /api/memory/create-page-table` - Create page table
-- `POST /api/memory/access-page` - Access page (may cause fault)
-- `POST /api/memory/page-replacement` - Simulate replacement
-
-### File System Endpoints
-
-- `POST /api/filesystem/create-file` - Create file
-- `POST /api/filesystem/read-file` - Read file
-- `POST /api/filesystem/write-file` - Write to file
-- `DELETE /api/filesystem/delete` - Delete file/directory
-
-Full API documentation available at `http://localhost:8000/docs` when running the backend.
-
-## 🎨 Design
-
-The application features:
-
-- Modern dark theme with vibrant accents
-- Smooth animations using Framer Motion
-- Responsive design for various screen sizes
-- Glassmorphism effects
-- Interactive visualizations
-
-## 🧪 Testing
-
-### Backend Tests
-
-```bash
-cd backend
-pytest tests/ -v
-```
-
-### Manual Testing
-
-1. Start both backend and frontend servers
-2. Navigate through the application
-3. Test each scheduling algorithm
-4. Verify metrics calculations
-5. Check explanations for accuracy
+| Module | Description |
+|--------|-------------|
+| [CPU Scheduler](docs/modules/CPU_SCHEDULER.md) | Process scheduling algorithms visualization |
+| [Paging Simulator](docs/modules/PAGING_SIMULATOR.md) | Page replacement algorithms demo |
+| [Virtual Memory](docs/modules/VIRTUAL_MEMORY.md) | TLB, page replacement, thrashing |
+| [Segmentation](docs/modules/SEGMENTATION.md) | Memory segmentation with protection |
+| [Contiguous Allocator](docs/modules/CONTIGUOUS_ALLOCATOR.md) | First/Best/Worst/Next fit algorithms |
+| [File System](docs/modules/FILE_SYSTEM.md) | Block allocation, defragmentation |
 
 ## 📚 Technical Stack
 
@@ -222,39 +114,14 @@ pytest tests/ -v
 - React Router - Navigation
 - Framer Motion - Animations
 - Recharts - Data visualization
-- Axios - HTTP client
 
 ## 🤝 Contributing
 
-This is an educational project. Contributions welcome for:
-
-- Additional scheduling algorithms
-- More memory management features
-- Enhanced visualizations
-- Additional demo scenarios
-- Documentation improvements
+Contributions welcome! See [Contributing Guide](docs/guides/CONTRIBUTING.md).
 
 ## 📝 License
 
 Educational project - Free to use for learning purposes.
-
-## 👥 Authors
-
-Developed as a comprehensive Operating Systems educational simulator.
-
-## 🙏 Acknowledgments
-
-- Inspired by classic OS textbooks and concepts
-- Built for students and educators
-- Designed with modern web technologies
-
-## 📞 Support
-
-For questions or issues:
-
-- Check the API documentation at `/docs`
-- Review demo scenarios for examples
-- Examine the code comments for implementation details
 
 ---
 
