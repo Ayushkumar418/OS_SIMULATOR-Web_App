@@ -56,6 +56,7 @@ Comprehensive documentation is available in the [`docs/`](docs/) folder:
 - [User Guide](docs/guides/USER_GUIDE.md)
 - [API Reference](docs/architecture/API_REFERENCE.md)
 - [Architecture Overview](docs/architecture/ARCHITECTURE.md)
+- [Screenshots Gallery](docs/assets/Screenshots.md)
 
 ## 🚀 Getting Started
 
