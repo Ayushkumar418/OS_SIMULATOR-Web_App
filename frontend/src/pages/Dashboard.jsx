@@ -38,9 +38,12 @@ const Dashboard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="dashboard-title">
-                        <span className="title-gradient">OS Simulator</span>
-                    </h1>
+                    <div className="dashboard-title-wrapper">
+                        <img src="/logo.png" alt="OS Simulator" className="dashboard-title-image" />
+                        <h1 className="dashboard-title">
+                            <span className="title-gradient">OS Simulator</span>
+                        </h1>
+                    </div>
                     <p className="dashboard-subtitle">
                         Interactive Operating System Visualizer for Education
                     </p>

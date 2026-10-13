@@ -10,8 +10,24 @@
     background: linear-gradient(180deg, var(--clr-bg-secondary) 0%, transparent 100%);
 }
 
-.dashboard-title {
+.dashboard-title-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
     margin-bottom: var(--space-md);
+}
+
+.dashboard-title-image {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+    object-fit: cover;
+}
+
+.dashboard-title {
+    margin-bottom: 0;
 }
 
 .title-gradient {
