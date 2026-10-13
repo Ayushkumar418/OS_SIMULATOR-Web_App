@@ -13,11 +13,29 @@ app = FastAPI(
     version="1.0.0"
 )
 
+import os
+
 # Configure CORS
+# In production, ALLOWED_ORIGINS can be set in Render environment variables.
+# By default, localhost servers and all *.vercel.app domains are supported.
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "").strip()
+if allowed_origins_env:
+    allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
+else:
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+    ]
+
+allow_all_origins = "*" in allowed_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # React dev servers
-    allow_credentials=True,
+    allow_origins=["*"] if allow_all_origins else allowed_origins,
+    allow_origin_regex=None if allow_all_origins else r"https:\/\/.*\.vercel\.app",
+    allow_credentials=not allow_all_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -47,4 +65,6 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    is_prod = os.environ.get("ENVIRONMENT", "development").lower() == "production"
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=not is_prod)

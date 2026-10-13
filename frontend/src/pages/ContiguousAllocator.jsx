@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import './ContiguousAllocator.css';
 
-const API_BASE = '/api/memory/contiguous';
+const API_BASE = API_BASE_URL ? `${API_BASE_URL}/api/memory/contiguous` : '/api/memory/contiguous';
 
 const ContiguousAllocator = () => {
     const [memoryState, setMemoryState] = useState(null);

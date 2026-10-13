@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import './PagingSimulator.css';
 
-const API_BASE = '/api/memory';
+const API_BASE = API_BASE_URL ? `${API_BASE_URL}/api/memory` : '/api/memory';
 
 const PagingSimulator = () => {
     const navigate = useNavigate();
